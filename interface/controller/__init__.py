@@ -1,7 +1,6 @@
 from tkinter import LEFT, Button, Listbox, EXTENDED, Scrollbar, Entry, W, END
 from tkinter.ttk import Combobox, Label
 
-
 # Объект управления интерфейсом
 import config
 import detail
@@ -10,7 +9,6 @@ import operation
 
 
 class Controller:
-
     # Данные работы
     _controller = None
 
@@ -42,7 +40,8 @@ class Controller:
     # Размещение блока параллельных кнопок добавления и удаления детали
     def _set_button_choosing_for_adding_details(self):
         # Блок выбора детали для добавления
-        self._entry = Combobox(self._controller_frame, values=self._operation_data.get_list_of_all_uploaded_details_name())
+        self._entry = Combobox(self._controller_frame,
+                               values=self._operation_data.get_list_of_all_uploaded_details_name())
         self._entry.grid(row=1, column=0, columnspan=2)
 
     # Размещение блока параллельных кнопок добавления и удаления детали
@@ -92,10 +91,10 @@ class Controller:
 
     # Размещение блока перемещения детали
     def _set_buttons_move_details(self):
-        Button(text="Вверх").grid(row=6, column=0, columnspan=2)
-        Button(text="Влево").grid(row=7, column=0, columnspan=1)
-        Button(text="Вправо").grid(row=7, column=1, columnspan=1)
-        Button(text="Вниз").grid(row=8, column=0, columnspan=2)
+        Button(text="Вверх", command=self.move_detail_top).grid(row=6, column=0, columnspan=2)
+        Button(text="Влево", command=self.move_detail_left).grid(row=7, column=0, columnspan=1)
+        Button(text="Вправо", command=self.move_detail_right).grid(row=7, column=1, columnspan=1)
+        Button(text="Вниз", command=self.move_detail_bottom).grid(row=8, column=0, columnspan=2)
 
     # Размещение блока кнопок поворота детали
     def _set_button_rotate(self):
@@ -180,24 +179,113 @@ class Controller:
             # Получение объекта выбраной детали
             _temp_entry_detail = self._get_entry_detail()
 
+            # Генерация UID
+            _temp_entry_detail.generate_uid()
+
             # Добавление выбранной детали в операцинные данные
             self._operation_data.add_detail(_temp_entry_detail)
 
             # Добавление в бокс названия добавленного элемента
-            self._box.insert(END, self._entry.get())
+            self._box.insert(END, self._entry.get() + " " + str(_temp_entry_detail.get_detail_uid()))
 
             # Очистка поля выбора
             self._entry.delete(0, END)
             #
             # print(self._canvas_field())
 
-
             print(len(self._operation_data.get_operation_details()))
 
             # Обновление канваса
             self._canvas_field.update(self._operation_data)
 
-
     # Обработка нажатие на удаление детали
     def _delete_detail(self):
-        print(1)
+
+        select = list(self._box.curselection())
+
+        if len(select) > 0:
+            select.reverse()
+            for temp_number in select:
+                # Информация о выбранной кликом детали
+                element_information = self._box.get(temp_number).split()
+
+                # Удаление из массива деталей
+                self._operation_data.delete_detail_by_uid(int(element_information[1]))
+
+                # Удаление детали из бокса
+                self._box.delete(temp_number)
+
+                print("SIZE: ", len(self._operation_data.get_operation_details()))
+
+                # Обновление канваса
+                self._canvas_field.update(self._operation_data)
+        else:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+    # Перемещение детали вправо
+    def move_detail_right(self):
+        select = list(self._box.curselection())
+
+        if len(select) == 1:
+            # Информация о выбранной кликом детали
+            element_information = self._box.get(select[0]).split()
+
+            # Движение детали вправо в операционных данных
+            self._operation_data.move_detail_by_uid(10, 0, 0, int(element_information[1]))
+
+            print(element_information)
+            # Обновление канваса
+            self._canvas_field.update(self._operation_data)
+        else:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+    # Перемещение детали влево
+    def move_detail_left(self):
+        select = list(self._box.curselection())
+
+        if len(select) == 1:
+            # Информация о выбранной кликом детали
+            element_information = self._box.get(select[0]).split()
+
+            # Движение детали вправо в операционных данных
+            self._operation_data.move_detail_by_uid(-10, 0, 0, int(element_information[1]))
+
+            print(element_information)
+            # Обновление канваса
+            self._canvas_field.update(self._operation_data)
+        else:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+    # Перемещение детали вверх
+    def move_detail_top(self):
+        select = list(self._box.curselection())
+
+        if len(select) == 1:
+            # Информация о выбранной кликом детали
+            element_information = self._box.get(select[0]).split()
+
+            # Движение детали вправо в операционных данных
+            self._operation_data.move_detail_by_uid(0, -10, 0, int(element_information[1]))
+
+            print(element_information)
+            # Обновление канваса
+            self._canvas_field.update(self._operation_data)
+        else:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+    # Перемещение детали вниз
+    def move_detail_bottom(self):
+        select = list(self._box.curselection())
+
+        if len(select) == 1:
+            # Информация о выбранной кликом детали
+            element_information = self._box.get(select[0]).split()
+
+            # Движение детали вправо в операционных данных
+            self._operation_data.move_detail_by_uid(0, +10, 0, int(element_information[1]))
+
+            print(element_information)
+            # Обновление канваса
+            self._canvas_field.update(self._operation_data)
+        else:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)

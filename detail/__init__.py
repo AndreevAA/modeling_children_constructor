@@ -4,6 +4,8 @@
 """
 
 # Объект детали
+from random import randint
+
 import config
 import detail.element_style
 from detail import vertex
@@ -22,6 +24,9 @@ class Detail:
 
     # Стиль детали
     _detail_style = None
+
+    # Адрес детали
+    _detail_uid = None
 
     # Инициализация объекта Детали
     def __init__(self, _detail_name):
@@ -59,6 +64,14 @@ class Detail:
     def draw(self, _canvas_field):
         for _component in self._detail_components:
             _component.draw(_canvas_field)
+
+    # Установка uid
+    def generate_uid(self):
+        self._detail_uid = randint(1000000, 100000000)
+
+    # Получение значения адреса
+    def get_detail_uid(self):
+        return self._detail_uid
 
 
 # Объект загрузки данных из файлов
@@ -109,7 +122,7 @@ class UploadingDetails:
         try:
             self.__set_row_file_data(str(open(str(self.get_file_path()), "r").read()).split("\n"))
             _error_status = config.SUCCESS_STATUS
-        except config.ERROR_STATUS:
+        except Exception:
             _error_status = config.ERROR_STATUS
 
         return _error_status

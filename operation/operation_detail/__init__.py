@@ -19,6 +19,7 @@ class OperationDetails:
 
     # Получение количества деталей
     def get_number_of_operation_details(self):
+        self._number_of_operation_details = len(self._operation_details)
         return self._number_of_operation_details
 
     # Получение массива операционных деталей
@@ -45,9 +46,8 @@ class OperationDetails:
 
         # Проверка на наличие элемента в списке
         if _deleting_element_position is not None:
-
-            # Удаление элемента по позиции
-            _error_status = self.delete_detail_by_position(_deleting_element_position)
+            if self._operation_details.pop(_deleting_element_position) is not None:
+                _error_status = config.SUCCESS_STATUS
 
         return _error_status
 
@@ -89,7 +89,8 @@ class OperationDetails:
 
         # Определение позиции детали
         for _operation_detail_number in range(self.get_number_of_operation_details()):
-            if self.get_operation_details()[_operation_detail_number].get_uid() == uid:
+            print("UID: ", uid, self.get_operation_details()[_operation_detail_number].get_detail_uid())
+            if self.get_operation_details()[_operation_detail_number].get_detail_uid() == uid:
                 _detail_position = _operation_detail_number
                 break
 
@@ -103,3 +104,22 @@ class OperationDetails:
             list_of_all_uploaded_details_name.append(_temp_detail.get_detail_name())
 
         return list_of_all_uploaded_details_name
+
+    # Перемещение в пространстве
+    def move_detail_by_uid(self, x_move, y_move, z_move, uid):
+        # Статус ошибки
+        _error_status = config.ERROR_STATUS
+
+        # Позиция удаляемого элемента
+        _moving_element_position = self._get_detail_position_by_uid(uid)
+
+        # Проверка на наличие элемента в списке
+        if _moving_element_position is not None:
+            for _moving_component in self.get_operation_details()[_moving_element_position].get_detail_components():
+                for _moving_vertex in _moving_component.get_component_vertexes():
+                    _moving_vertex.update(_moving_vertex.get_x_position() + x_move,
+                                          _moving_vertex.get_y_position() + y_move,
+                                          _moving_vertex.get_z_position() + z_move)
+                _error_status = config.SUCCESS_STATUS
+
+        return _error_status

@@ -10,7 +10,7 @@ from operation.operation_detail import OperationDetails
 
 def main():
     # Подгрузка данных
-    _uploaded_details = detail.UploadingDetails("/Users/aleksandrandreev/modeling_children_constructor/input_details/cube.txt")
+    _uploaded_details = detail.UploadingDetails("/Applications/modeling_children_constructor/input_details/cube.txt")
 
     # Непосредственная загрузка данных
     _error_status = _uploaded_details.upload_details()
