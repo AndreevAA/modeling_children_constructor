@@ -15,7 +15,7 @@ class CanvasField:
         self._window = _window
 
     # Запуск окна
-    def setup(self):
+    def setup(self, _operation_data):
 
         # Создание холста
         _temp_canvas = Canvas(self._window, width=400, height=400, bg="lightgrey",
@@ -25,10 +25,10 @@ class CanvasField:
         self._canvas_field = _temp_canvas
 
         # Обновление холста
-        self.update()
+        self.update(_operation_data)
 
     # Обновление изображения на холсте
-    def update(self):
+    def update(self, _operation_data):
         # Полная очистка холста
         self._canvas_field.delete("all")
 
@@ -36,10 +36,10 @@ class CanvasField:
         self._canvas_field = Canvas(self._window, width=400, height=400, bg="lightgrey",
                              cursor="pencil")
 
-        # # Отрисовка деталей
-        # for temp_detail in self.operation_data.details:
-        #     print("Рисуется ->")
-        #     temp_detail.draw(self.canvas)
+        # Отрисовка деталей
+        for temp_detail in _operation_data.get_operation_details():
+            print("Рисуется ->")
+            temp_detail.draw(self._canvas_field)
 
         # Упаковка
         self._canvas_field.grid(row=0, column=3, columnspan=10, rowspan=10)

@@ -1,4 +1,4 @@
-from tkinter import LEFT, Button, Listbox, EXTENDED, Scrollbar, Entry, W
+from tkinter import LEFT, Button, Listbox, EXTENDED, Scrollbar, Entry, W, END
 from tkinter.ttk import Combobox, Label
 
 
@@ -26,17 +26,23 @@ class Controller:
 
     _operation_data = None
 
+    _window = None
+
+    _canvas_field = None
+
     # Инициализация объекта панели управления интерфейсом
-    def __init__(self):
-        super().__init__()
+    def __init__(self, _operation_data, _window, _canvas_field):
 
         # Добавление операционных данных
-        self._operation_data = operation.Operation()
+        self._operation_data = _operation_data
+
+        self._window = _window
+        self._canvas_field = _canvas_field
 
     # Размещение блока параллельных кнопок добавления и удаления детали
     def _set_button_choosing_for_adding_details(self):
         # Блок выбора детали для добавления
-        self._entry = Combobox(self._controller_frame, values=["Куб"])
+        self._entry = Combobox(self._controller_frame, values=self._operation_data.get_list_of_all_uploaded_details_name())
         self._entry.grid(row=1, column=0, columnspan=2)
 
     # Размещение блока параллельных кнопок добавления и удаления детали
@@ -151,7 +157,12 @@ class Controller:
         _entry_detail_name = self._entry.get()
 
         # Полученный объект детали
-        _detail = detail.Detail(_entry_detail_name)
+        _detail = detail.Detail("")
+
+        # Нахождение выбранной детали
+        for _temp_detail in self._operation_data.get_uploaded_details():
+            if _temp_detail.get_detail_name() == _entry_detail_name:
+                _detail = _temp_detail
 
         return _detail
 
@@ -166,7 +177,26 @@ class Controller:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
         elif _error_status == config.SUCCESS_STATUS:
-            self._operation_data.add_detail(self._get_entry_detail())
+            # Получение объекта выбраной детали
+            _temp_entry_detail = self._get_entry_detail()
+
+            # Добавление выбранной детали в операцинные данные
+            self._operation_data.add_detail(_temp_entry_detail)
+
+            # Добавление в бокс названия добавленного элемента
+            self._box.insert(END, self._entry.get())
+
+            # Очистка поля выбора
+            self._entry.delete(0, END)
+            #
+            # print(self._canvas_field())
+
+
+            print(len(self._operation_data.get_operation_details()))
+
+            # Обновление канваса
+            self._canvas_field.update(self._operation_data)
+
 
     # Обработка нажатие на удаление детали
     def _delete_detail(self):

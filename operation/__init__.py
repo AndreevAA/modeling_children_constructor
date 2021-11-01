@@ -24,7 +24,7 @@ class Operation:
         return self._operation_details
 
     # Обновление данных операционных деталей
-    def _update_operation_details(self, _operation_details):
+    def update_operation_details(self, _operation_details):
         self._operation_details = _operation_details
 
     # Добавление элемента операционных деталей
@@ -33,15 +33,23 @@ class Operation:
             self._operation_details = operation.operation_detail.OperationDetails()
 
         _operation_details = self._get_operation_details().add_detail(_detail)
-        self._update_operation_details(_operation_details)
+        self.update_operation_details(_operation_details)
 
     # Удаление элементов операционных деталей
     def delete_all_details(self):
         _operation_details = self._get_operation_details().delete_all_details()
-        self._update_operation_details(_operation_details)
+        self.update_operation_details(_operation_details)
 
     # Удаление детали по uid
     def delete_detail_by_uid(self, _uid):
         _operation_details = self._get_operation_details().delete_detail_by_uid(_uid)
-        self._update_operation_details(_operation_details)
-
+        self.update_operation_details(_operation_details)
+    #
+    # # Получение списка всех деталей
+    # def get_list_of_all_details_name(self):
+    #     list_of_all_details_name = []
+    #
+    #     for _temp_detail in self._operation_details:
+    #         list_of_all_details_name.append(_temp_detail.get_detail_name())
+    #
+    #     return list_of_all_details_name

@@ -9,6 +9,9 @@ class OperationDetails:
     # Операционные данные деталей
     _operation_details = None
 
+    # Загруженные детали
+    _uploaded_details = None
+
     # Инициализация операционных деталей
     def __init__(self):
         self._operation_details = config.EMPTY_LIST
@@ -49,9 +52,17 @@ class OperationDetails:
         return _error_status
 
     # Обновление списка деталей
-    def _update_operation_details(self, _number_of_operation_details, _operation_details):
+    def update_operation_details(self, _number_of_operation_details, _operation_details):
         self._number_of_operation_details = _number_of_operation_details
         self._operation_details = _operation_details
+
+    # Обновление загруженных деталей
+    def update_uploaded_details(self, _uploaded_details):
+        self._uploaded_details = _uploaded_details
+
+    # Получение загруженных деталей
+    def get_uploaded_details(self):
+        return self._uploaded_details
 
     # Удаление детали по позиции
     def delete_detail_by_position(self, _position):
@@ -83,3 +94,12 @@ class OperationDetails:
                 break
 
         return _detail_position
+
+    # Получение списка всех деталей
+    def get_list_of_all_uploaded_details_name(self):
+        list_of_all_uploaded_details_name = []
+
+        for _temp_detail in self._uploaded_details:
+            list_of_all_uploaded_details_name.append(_temp_detail.get_detail_name())
+
+        return list_of_all_uploaded_details_name

@@ -48,50 +48,57 @@ class Component:
         return self._component_vertexes
 
     # Получение списка граней
-    def get__component_faces(self):
+    def get_component_faces(self):
         return self._component_faces
 
     # Отрисовка грани компоненты
     def __draw_component_face(self, _component_face_vertexes):
 
         # Список пар координат вершин
-        _polygon_pairs_of_vertexes = config.EMPTY_LIST
+        _polygon_pairs_of_vertexes = []
 
         # Добавление в список пар координат вершин пар вершин
         for _number_of_vertex in _component_face_vertexes:
 
             # Текущая вершина по позиции
-            _vertex = self.get_component_vertexes()[_number_of_vertex]
+            _vertex = self.get_component_vertexes()[int(_number_of_vertex)]
 
             # Добавление данных текущей вершины
             _polygon_pairs_of_vertexes.append([_vertex.get_x_position(),
-                                               _vertex.get_y_position(),
-                                               _vertex.get_z_position()])
+                                               _vertex.get_y_position()])
+
+        print(_polygon_pairs_of_vertexes)
 
         # Отрисовка области
         self._get_canvas().create_polygon(_polygon_pairs_of_vertexes, fill=self._get_component_style().get_color())
 
     # Прототип функции отрисовки компоненты
-    def draw(self, _canvas, _component_position):
+    def draw(self, _canvas):
 
         # Установка холста рисования
         self.set_component_canvas(_canvas)
 
         # Установка позиции на холсте рисования
-        self.set_component_position(_component_position)
+        self.set_component_position(self._component_position)
 
         # Статус отрисовки компоненты
         _error_status = None
 
-        # Виртуализация отрисовки компоненты
-        try:
-            # Проход по всем наборам граней
-            for _component_face_vertexes in self.get__component_faces():
-                self.__draw_component_face(_component_face_vertexes)
+        # Проход по всем наборам граней
+        for _component_face_vertexes in self.get_component_faces():
+            self.__draw_component_face(_component_face_vertexes)
 
-            _error_status = config.SUCCESS_STATUS
-        except config.ERROR_STATUS:
-            _error_status = config.ERROR_STATUS
+        _error_status = config.SUCCESS_STATUS
+
+        # # Виртуализация отрисовки компоненты
+        # try:
+        #     # Проход по всем наборам граней
+        #     for _component_face_vertexes in self.get_component_faces():
+        #         self.__draw_component_face(_component_face_vertexes)
+        #
+        #     _error_status = config.SUCCESS_STATUS
+        # except Exception:
+        #     _error_status = config.ERROR_STATUS
 
         return config.ERROR_STATUS
 

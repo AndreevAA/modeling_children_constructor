@@ -1,13 +1,30 @@
 # Подключение конфигурации
 
 # Основной блок программы
+import config
 import detail
 from interface import Interface
+from operation import Operation
+from operation.operation_detail import OperationDetails
 
 
 def main():
-    detail.UploadingDetails("/input_files/1.txt")
-    Interface()
+    # Подгрузка данных
+    _uploaded_details = detail.UploadingDetails("/Users/aleksandrandreev/modeling_children_constructor/input_details/cube.txt")
+
+    # Непосредственная загрузка данных
+    _error_status = _uploaded_details.upload_details()
+
+    # Проверка на отсуствие ошибок при загрузка данных
+    if _error_status != config.ERROR_STATUS:
+        # Инициализация объекта операционных данных
+        _operation = OperationDetails()
+
+        # Передача операционных данных
+        _operation.update_uploaded_details(_uploaded_details.get_uploaded_details())
+
+        # Запуск интерефейса
+        Interface(_operation_data=_operation)
 
 
 # Старт программы
