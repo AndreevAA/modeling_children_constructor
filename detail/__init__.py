@@ -59,9 +59,6 @@ class UploadingDetails:
     # Количество загруженных деталей
     _number_of_uploaded_details = None
 
-    # Статус ошибок во время загрузки
-
-
     # Все загруженные детали
     _uploaded_detail = None
 
@@ -226,6 +223,7 @@ class UploadingDetails:
     def _get_uploaded_details(self):
 
         # Статус ошибки при загрузке файла
+        global detail
         _error_status = None
 
         # Загруженные детали
@@ -246,8 +244,13 @@ class UploadingDetails:
 
                 _detail_components = self.__create_detail_components_list(_file_string, _number_of_components)
 
+                _temp_uploaded_detail = Detail(_detail_name)
+
+                _temp_uploaded_detail.set_detail_style(_detail_style)
+                _temp_uploaded_detail.set_detail_components(_detail_components)
+
                 _uploaded_details.append(
-                    Detail(_detail_name, _detail_style, _detail_components)
+                    _temp_uploaded_detail
                 )
 
             _error_status = config.SUCCESS_STATUS
