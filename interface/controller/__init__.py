@@ -1,3 +1,4 @@
+from math import radians
 from tkinter import LEFT, Button, Listbox, EXTENDED, Scrollbar, Entry, W, END
 from tkinter.ttk import Combobox, Label
 
@@ -27,6 +28,8 @@ class Controller:
     _window = None
 
     _canvas_field = None
+
+    _degree_entry = None
 
     # Инициализация объекта панели управления интерфейсом
     def __init__(self, _operation_data, _window, _canvas_field):
@@ -98,7 +101,7 @@ class Controller:
 
     # Размещение блока кнопок поворота детали
     def _set_button_rotate(self):
-        Button(text="Повернуть").grid(row=14, column=0, columnspan=2)
+        Button(text="Повернуть", command=self.rotate_detail).grid(row=14, column=0, columnspan=2)
 
     # Размещение вводимых данных для поворота
     def _set_inputting_form_data_for_rotation(self):
@@ -106,7 +109,8 @@ class Controller:
         self._axis = Combobox(self._controller_frame, values=["Ось X", "Ось Y", "Ось Z"])
         self._axis.grid(row=11, column=0, columnspan=2)
 
-        Entry(textvariable=self._degree).grid(row=13, column=0, columnspan=2)
+        self._degree_entry = Entry(textvariable=self._degree)
+        self._degree_entry.grid(row=13, column=0, columnspan=2)
 
     # Запуск панели управления
     def setup(self):
@@ -164,6 +168,10 @@ class Controller:
                 _detail = _temp_detail
 
         return _detail
+
+    # Получение направления поворота детали
+    def _get_detail_rotation_way(self):
+        return self._axis.get()
 
     # Обработка нажатия на добавление детали
     def _add_detail(self):
@@ -286,6 +294,36 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
+            self._canvas_field.update(self._operation_data)
+        else:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+    # Поворот детали
+    def rotate_detail(self):
+        # Выбранная деталь для поворота
+        selected_detail_to_rotate = list(self._box.curselection())
+
+        # Проверка на количество выбранных деталей
+        if len(selected_detail_to_rotate) == 1:
+            # Информация о выбранной кликом детали
+            element_information = self._box.get(selected_detail_to_rotate[0]).split()
+
+            # Получение оси поворота
+            _detail_rotation_way = self._get_detail_rotation_way()
+
+            # Угол поворота детали
+            _detail_degree = None
+
+            # Получение угла поворота фигуры
+            try:
+                _detail_degree = radians(float(self._degree_entry.get()))
+            except Exception:
+                interface.message.Message(config.ERROR_STATUS_DETAIL_ERROR_DEGREE)
+
+            if _detail_degree is not None:
+                self._operation_data.rotate_detail(int(element_information[1]), _detail_degree, _detail_rotation_way)
+
+            # Обновление Canvas
             self._canvas_field.update(self._operation_data)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)

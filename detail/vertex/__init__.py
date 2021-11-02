@@ -26,18 +26,18 @@ class Vertex:
 
     # Общее обновление позиции по осям
     def update(self, _x_position, _y_position, _z_position):
-        self._update_x_position(_x_position)
-        self._update_y_position(_y_position)
-        self._update_z_position(_z_position)
+        self.update_x_position(_x_position)
+        self.update_y_position(_y_position)
+        self.update_z_position(_z_position)
 
     # Обновление позиции по координаты X
-    def _update_x_position(self, _x_position):
+    def update_x_position(self, _x_position):
         self._x_position = _x_position
 
     # Обновление позиции по координаты X
-    def _update_y_position(self, _y_position):
+    def update_y_position(self, _y_position):
         self._y_position = _y_position
 
     # Обновление позиции по координаты X
-    def _update_z_position(self, _z_position):
+    def update_z_position(self, _z_position):
         self._z_position = _z_position
