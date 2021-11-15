@@ -7,6 +7,7 @@ from interface import Interface
 from operation import Operation
 from operation.operation_detail import OperationDetails
 
+import operation.operation_axis
 
 def main():
     # Подгрузка данных
@@ -24,7 +25,7 @@ def main():
         _operation.update_uploaded_details(_uploaded_details.get_uploaded_details())
 
         # Запуск интерефейса
-        Interface(_operation_data=_operation)
+        Interface(_operation_data=_operation, _operation_axis=operation.operation_axis.OperationAxis())
 
 
 # Старт программы

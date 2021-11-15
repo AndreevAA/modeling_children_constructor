@@ -5,10 +5,14 @@
 # Объект операционных данных
 import config
 import operation.operation_detail
+import operation.operation_axis
 
 
 # Композиция объектов операции
 class Operation:
+
+    # Данные осей
+    _operation_axis = None
 
     # Приватные поля
     _operation_details = None
@@ -18,6 +22,12 @@ class Operation:
 
         # Связка объектов операционных деталей
         self._operation_details = operation.operation_detail.OperationDetails()
+
+        self._operation_axis = operation.operation_axis.OperationAxis()
+
+    # Получение операционных осей координат
+    def get_operation_axis(self):
+        return self._operation_axis
 
     # Получение операционных деталей
     def _get_operation_details(self):

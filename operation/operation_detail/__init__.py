@@ -109,6 +109,21 @@ class OperationDetails:
         return list_of_all_uploaded_details_name
 
     # Перемещение в пространстве
+    def move_details(self, x_move, y_move, z_move):
+        # Статус ошибки
+        _error_status = config.ERROR_STATUS
+
+        for _moving_detail in self.get_operation_details():
+            for _moving_component in _moving_detail.get_detail_components():
+                for _moving_vertex in _moving_component.get_component_vertexes():
+                    _moving_vertex.update(_moving_vertex.get_x_position() + x_move,
+                                          _moving_vertex.get_y_position() + y_move,
+                                          _moving_vertex.get_z_position() + z_move)
+                _error_status = config.SUCCESS_STATUS
+
+        return _error_status
+
+    # Перемещение в пространстве
     def move_detail_by_uid(self, x_move, y_move, z_move, uid):
         # Статус ошибки
         _error_status = config.ERROR_STATUS
@@ -138,9 +153,9 @@ class OperationDetails:
         # Выявление оси и смена значений
         if rotation_way == "Ось X":
             x_rotated_result_point = result_point.get_x_position()
-            y_rotated_result_point = result_point.get_y_position() * cos(degree) + \
+            y_rotated_result_point = result_point.get_y_position() * cos(degree) - \
                                      result_point.get_z_position() * sin(degree)
-            z_rotated_result_point = - result_point.get_y_position() * sin(degree) + \
+            z_rotated_result_point = result_point.get_y_position() * sin(degree) + \
                                      result_point.get_z_position() * cos(degree)
             result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
         elif rotation_way == "Ось Y":

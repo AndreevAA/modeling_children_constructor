@@ -24,6 +24,7 @@ class Controller:
     _controller_frame = None
 
     _operation_data = None
+    _operation_axis = None
 
     _window = None
 
@@ -32,10 +33,11 @@ class Controller:
     _degree_entry = None
 
     # Инициализация объекта панели управления интерфейсом
-    def __init__(self, _operation_data, _window, _canvas_field):
+    def __init__(self, _operation_data, _operation_axis, _window, _canvas_field):
 
         # Добавление операционных данных
         self._operation_data = _operation_data
+        self._operation_axis = _operation_axis
 
         self._window = _window
         self._canvas_field = _canvas_field
@@ -66,12 +68,12 @@ class Controller:
         add_d_l.grid(row=3, column=0, columnspan=2, pady=(20, 10), sticky=W)
 
         # Ярлык перемещения детали
-        m_d_l = Label(text="Перемещение", justify=LEFT)
+        m_d_l = Label(text="Перемещение фигура", justify=LEFT)
         m_d_l.config(font=("Courier", 16, "bold"))
         m_d_l.grid(row=5, column=0, columnspan=2, pady=(20, 10), sticky=W)
 
         # Ярлык поворота детали
-        r_d_l = Label(text="Поворот", justify=LEFT)
+        r_d_l = Label(text="Поворот детали", justify=LEFT)
         r_d_l.config(font=("Courier", 16, "bold"))
         r_d_l.grid(row=9, column=0, columnspan=2, pady=(20, 10), sticky=W)
 
@@ -82,6 +84,11 @@ class Controller:
         l_dge = Label(text="Угол поворота", justify=LEFT)
         l_dge.config(font=("Courier", 9))
         l_dge.grid(row=12, column=0, columnspan=2, pady=(2, 2), sticky=W)
+
+        # Ярлык поворота сцены
+        r_d_l = Label(text="Перемещение сцены", justify=LEFT)
+        r_d_l.config(font=("Courier", 16, "bold"))
+        r_d_l.grid(row=0, column=15, columnspan=2, pady=(20, 10), sticky=W)
 
     # Размещение списка добавленных деталей
     def _set_box(self):
@@ -98,6 +105,13 @@ class Controller:
         Button(text="Влево", command=self.move_detail_left).grid(row=7, column=0, columnspan=1)
         Button(text="Вправо", command=self.move_detail_right).grid(row=7, column=1, columnspan=1)
         Button(text="Вниз", command=self.move_detail_bottom).grid(row=8, column=0, columnspan=2)
+
+    # Размещение блока перемещения сцены
+    def _set_buttons_move_scene(self):
+        Button(text="Вверх", command=self.move_scene_top).grid(row=1, column=15, columnspan=2)
+        Button(text="Влево", command=self.move_scene_left).grid(row=2, column=15, columnspan=1)
+        Button(text="Вправо", command=self.move_scene_right).grid(row=2, column=16, columnspan=1)
+        Button(text="Вниз", command=self.move_scene_bottom).grid(row=3, column=15, columnspan=2)
 
     # Размещение блока кнопок поворота детали
     def _set_button_rotate(self):
@@ -131,6 +145,9 @@ class Controller:
 
         # Размещение блока перемещения детали
         self._set_buttons_move_details()
+
+        # Размещение блока перемещения сцены
+        self._set_buttons_move_scene()
 
         # Размещение вводимых данных для поворота
         self._set_inputting_form_data_for_rotation()
@@ -204,7 +221,7 @@ class Controller:
             print(len(self._operation_data.get_operation_details()))
 
             # Обновление канваса
-            self._canvas_field.update(self._operation_data)
+            self._canvas_field.update(self._operation_data, self._operation_axis)
 
     # Обработка нажатие на удаление детали
     def _delete_detail(self):
@@ -226,7 +243,7 @@ class Controller:
                 print("SIZE: ", len(self._operation_data.get_operation_details()))
 
                 # Обновление канваса
-                self._canvas_field.update(self._operation_data)
+                self._canvas_field.update(self._operation_data, self._operation_axis)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -243,7 +260,7 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data)
+            self._canvas_field.update(self._operation_data, self._operation_axis)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -260,7 +277,7 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data)
+            self._canvas_field.update(self._operation_data, self._operation_axis)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -277,9 +294,41 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data)
+            self._canvas_field.update(self._operation_data, self._operation_axis)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+    # Перемещение сцены
+    def move_scene_top(self):
+        self._operation_data.move_details(0, +10, 0)
+        self._operation_axis.move(0, +10, 0)
+
+        # Обновление канваса
+        self._canvas_field.update(self._operation_data, self._operation_axis)
+
+    # Перемещение сцены
+    def move_scene_bottom(self):
+        self._operation_data.move_details(0, -10, 0)
+        self._operation_axis.move(0, -10, 0)
+
+        # Обновление канваса
+        self._canvas_field.update(self._operation_data, self._operation_axis)
+
+    # Перемещение сцены
+    def move_scene_left(self):
+        self._operation_data.move_details(-10, 0, 0)
+        self._operation_axis.move(-10, 0, 0)
+
+        # Обновление канваса
+        self._canvas_field.update(self._operation_data, self._operation_axis)
+
+    # Перемещение сцены
+    def move_scene_right(self):
+        self._operation_data.move_details(+10, 0, 0)
+        self._operation_axis.move(+10, 0, 0)
+
+        # Обновление канваса
+        self._canvas_field.update(self._operation_data, self._operation_axis)
 
     # Перемещение детали вниз
     def move_detail_bottom(self):
@@ -294,7 +343,7 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data)
+            self._canvas_field.update(self._operation_data, self._operation_axis)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -324,6 +373,7 @@ class Controller:
                 self._operation_data.rotate_detail(int(element_information[1]), _detail_degree, _detail_rotation_way)
 
             # Обновление Canvas
-            self._canvas_field.update(self._operation_data)
+            self._canvas_field.update(self._operation_data, self._operation_axis)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+

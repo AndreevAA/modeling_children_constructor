@@ -19,21 +19,24 @@ class Interface:
 
     # Операционные данные работы пользователя
     _operation_data = None
+    _operation_axis = None
 
     # Инициализация интерфейса
-    def __init__(self, _operation_data):
+    def __init__(self, _operation_data, _operation_axis):
         # Передача данных работы
         self._operation_data = _operation_data
+        self._operation_axis = _operation_axis
 
         # Инициализация окна, холста и панели управления
         self._window = interface.window.Window()
         self._canvas_field = interface.canvas_field.CanvasField(self._window.get_window())
 
-        self._controller = interface.controller.Controller(self._operation_data, self._window, self._canvas_field)
+        self._controller = interface.controller.Controller(self._operation_data, self._operation_axis,
+                                                           self._window, self._canvas_field)
 
         # Развертывание элементов
         self._window.setup()
-        self._canvas_field.setup(self._operation_data)
+        self._canvas_field.setup(self._operation_data, self._operation_axis)
         self._controller.setup()
 
         # Запуск окна
