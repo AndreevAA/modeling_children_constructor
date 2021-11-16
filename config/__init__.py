@@ -40,3 +40,18 @@ DETAILS_CUBE = "Куб"
 
 # Стартовая позиция
 START_POSITION = 0
+
+# Расстояние сетки
+DELTA_GRID_M = 15
+DELTA_GRID_P = 15
+
+GRID_LINE_COLOR = "red"
+GRID_LINE_WIDTH = 0.5
+
+ABS_MIN = -10000
+ABS_MAX = 10000
+
+AXIS_X = "x"
+AXIS_Y = "y"
+AXIS_Z = "z"
+
