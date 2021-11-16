@@ -12,6 +12,30 @@ class Vertex:
         self._y_position = _y_position
         self._z_position = _z_position
 
+    @property
+    def x(self):
+        return self._x_position
+
+    @property
+    def y(self):
+        return self._y_position
+
+    @property
+    def z(self):
+        return self._z_position
+
+    @x.setter
+    def x(self, value):
+        self._x_position = value
+
+    @y.setter
+    def y(self, value):
+        self._y_position = value
+
+    @z.setter
+    def z(self, value):
+        self._z_position = value
+
     # Получение значения координаты точки по оси Х
     def get_x_position(self):
         return self._x_position

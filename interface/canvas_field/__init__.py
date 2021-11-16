@@ -36,13 +36,13 @@ class CanvasField:
         self._canvas_field = Canvas(self._window, width=400, height=400, bg="lightgrey",
                              cursor="pencil")
 
+        # Отрисовка осей координат
+        _operation_axis.draw(self._canvas_field)
+
         # Отрисовка деталей
         for temp_detail in _operation_data.get_operation_details():
             print("Рисуется ->")
             temp_detail.draw(self._canvas_field)
-
-        # Отрисовка осей координат
-        _operation_axis.draw(self._canvas_field)
 
         # Упаковка
         self._canvas_field.grid(row=0, column=3, columnspan=10, rowspan=10)

@@ -3,7 +3,7 @@ from math import sin, cos
 
 import config
 import detail
-
+import operation.operation_axis.operation_grid
 
 class Axis:
     _first_vertex = None
@@ -45,69 +45,102 @@ class Axis:
         self.set_first_vertex(_first_vertex)
         self.set_second_vertex(_second_vertex)
 
+    @property
+    def first_vertex(self):
+        return self._first_vertex
 
-class OperationAxis:
+    @property
+    def second_vertex(self):
+        return self.second_vertex
 
-    x_axis = Axis()
-    y_axis = Axis()
-    z_axis = Axis()
+    def draw(self, _canvas_field):
+        _canvas_field.create_line(self._first_vertex.get_x_position(),
+                                  self._first_vertex.get_y_position(),
+                                  self._second_vertex.get_x_position(),
+                                  self._second_vertex.get_y_position()
+                                  )
+
+
+class OperationAxes:
+    _x_axis = Axis()
+    _y_axis = Axis()
+    _z_axis = Axis()
 
     def __init__(self):
-
         # Установка дефолтных значений
         self.set_default_coordinates()
 
+    @property
+    def x(self):
+        return self._x_axis
+
+    @property
+    def y(self):
+        return self._y_axis
+
+    @property
+    def z(self):
+        return self._z_axis
+
     def set_default_coordinates(self):
-        self.x_axis.set_first_vertex(
-            detail.vertex.Vertex(-10000, 0, 0)
+        self._x_axis.set_first_vertex(
+            detail.vertex.Vertex(config.ABS_MIN, 0, 0)
         )
-        self.x_axis.set_second_vertex(
-            detail.vertex.Vertex(+10000, 0, 0)
-        )
-
-        self.y_axis.set_first_vertex(
-            detail.vertex.Vertex(0, -10000, 0)
-        )
-        self.y_axis.set_second_vertex(
-            detail.vertex.Vertex(0, +10000, 0)
+        self._x_axis.set_second_vertex(
+            detail.vertex.Vertex(config.ABS_MAX, 0, 0)
         )
 
-        self.z_axis.set_first_vertex(
-            detail.vertex.Vertex(0, 0, -10000)
+        self._y_axis.set_first_vertex(
+            detail.vertex.Vertex(0, config.ABS_MIN, 0)
         )
-        self.z_axis.set_second_vertex(
-            detail.vertex.Vertex(0, 0, +10000)
+        self._y_axis.set_second_vertex(
+            detail.vertex.Vertex(0, config.ABS_MAX, 0)
         )
 
-    def draw(self, _canvas_field):
-
-        print(self.x_axis.get_first_vertex().get_x_position(),
-                                  self.x_axis.get_first_vertex().get_y_position(),
-                                    "  :  ",
-                                  self.x_axis.get_second_vertex().get_x_position(),
-                                  self.x_axis.get_second_vertex().get_y_position())
-
-        _canvas_field.create_line(self.x_axis.get_first_vertex().get_x_position(),
-                                  self.x_axis.get_first_vertex().get_y_position(),
-                                  self.x_axis.get_second_vertex().get_x_position(),
-                                  self.x_axis.get_second_vertex().get_y_position()
-                                  )
-
-        _canvas_field.create_line(self.y_axis.get_first_vertex().get_x_position(),
-                                  self.y_axis.get_first_vertex().get_y_position(),
-                                  self.y_axis.get_second_vertex().get_x_position(),
-                                  self.y_axis.get_second_vertex().get_y_position()
-                                  )
-        #
-        # _canvas_field.create_line(self.x_axis.get_first_vertex().get_x_position(),
-        #                           self.x_axis.get_first_vertex().get_y_position(),
-        #                           self.x_axis.get_second_vertex().get_x_position(),
-        #                           self.x_axis.get_second_vertex().get_y_position()
-        #                           )
-
+        self._z_axis.set_first_vertex(
+            detail.vertex.Vertex(0, 0, config.ABS_MIN)
+        )
+        self._z_axis.set_second_vertex(
+            detail.vertex.Vertex(0, 0, config.ABS_MAX)
+        )
 
     def move(self, x, y, z):
-        self.x_axis.move(x, y, z)
-        self.y_axis.move(x, y, z)
-        self.z_axis.move(x, y, z)
+        self._x_axis.move(x, y, z)
+        self._y_axis.move(x, y, z)
+        self._z_axis.move(x, y, z)
 
+    def draw(self, canvas_field):
+        self._x_axis.draw(canvas_field)
+        self._y_axis.draw(canvas_field)
+        self._z_axis.draw(canvas_field)
+
+
+class OperationGrids:
+    _x_grid = operation_grid.OperationGrid(config.AXIS_X)
+    _y_grid = operation_grid.OperationGrid(config.AXIS_Y)
+    _z_grid = operation_grid.OperationGrid(config.AXIS_Z)
+
+    def draw(self, canvas_field):
+        print("X: ")
+        self._x_grid.draw(canvas_field)
+        print("---\nY: ")
+        self._y_grid.draw(canvas_field)
+        print("---\nZ: ")
+        self._z_grid.draw(canvas_field)
+
+    def move(self, x, y, z):
+        self._x_grid.move(x, y, z)
+        self._y_grid.move(x, y, z)
+        self._z_grid.move(x, y, z)
+
+class OperationAxis:
+    _operation_axes = OperationAxes()
+    _operation_grids = OperationGrids()
+
+    def draw(self, _canvas_field):
+        self._operation_axes.draw(_canvas_field)
+        self._operation_grids.draw(_canvas_field)
+
+    def move(self, x, y, z):
+        self._operation_axes.move(x, y, z)
+        self._operation_grids.move(x, y, z)
