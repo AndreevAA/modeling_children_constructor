@@ -122,14 +122,27 @@ class Controller:
     def _set_button_rotate(self):
         Button(text="Повернуть", command=self.rotate_detail).grid(row=14, column=0, columnspan=2)
 
-    # Размещение вводимых данных для поворота
+    # Размещение блока кнопок поворота детали
+    def _set_button_rotate_scene(self):
+        Button(text="Повернуть", command=self.rotate_scene).grid(row=8, column=16, columnspan=2)
+
+    # Размещение вводимых данных для поворота детали
     def _set_inputting_form_data_for_rotation(self):
         # Блок параллельных параметров поворота
-        self._axis = Combobox(self._controller_frame, values=["Ось X", "Ось Y", "Ось Z"])
+        self._axis = Combobox(self._controller_frame, values=[config.AXIS_X, config.AXIS_Y, config.AXIS_Z])
         self._axis.grid(row=11, column=0, columnspan=2)
 
         self._degree_entry = Entry(textvariable=self._degree)
         self._degree_entry.grid(row=13, column=0, columnspan=2)
+
+    # Размещение вводимых данных для поворота сцены
+    def _set_inputting_form_data_for_rotation_scene(self):
+        # Блок параллельных параметров поворота
+        self._axis_scene = Combobox(self._controller_frame, values=[config.AXIS_X, config.AXIS_Y, config.AXIS_Z])
+        self._axis_scene.grid(row=6, column=15, columnspan=2)
+
+        self._degree_entry_scene = Entry(textvariable=self._degree)
+        self._degree_entry_scene.grid(row=7, column=15, columnspan=2)
 
     # Запуск панели управления
     def setup(self):
@@ -160,8 +173,14 @@ class Controller:
         # Размещение вводимых данных для поворота
         self._set_inputting_form_data_for_rotation()
 
+        # Размещение вводимых данных для поворота сцены
+        self._set_inputting_form_data_for_rotation_scene()
+
         # Размещение кнопки поворота
         self._set_button_rotate()
+
+        # Размещение кнопки поворота сцены
+        self._set_button_rotate_scene()
 
         # Переход от реального к виртуальному
         self._controller = _temp_controller
@@ -197,6 +216,10 @@ class Controller:
     # Получение направления поворота детали
     def _get_detail_rotation_way(self):
         return self._axis.get()
+
+    # Получение напрвления поворота сцены
+    def _get_scene_rotation_way(self):
+        return self._axis_scene.get()
 
     # Обработка нажатия на добавление детали
     def _add_detail(self):
@@ -354,6 +377,33 @@ class Controller:
             self._canvas_field.update(self._operation_data, self._operation_axis)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+    # Поворот сцены
+    def rotate_scene(self):
+
+        # Получение оси поворота
+        _rotation_way_axis = self._get_scene_rotation_way()
+
+        # Угол поворота детали
+        _scene_degree = None
+
+        # Получение угла поворота фигуры
+        try:
+            _scene_degree = radians(float(self._degree_entry_scene.get()))
+        except Exception:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_ERROR_DEGREE)
+
+        _base_vertex = self._operation_axis.axes_intersection.intersection_vertex
+
+        print("_base_vertex: ", _base_vertex.x, _base_vertex.y, _base_vertex.z)
+
+        if _scene_degree is not None:
+            self._operation_axis.rotate(
+                _base_vertex, _rotation_way_axis, _scene_degree
+            )
+
+        # Обновление Canvas
+        self._canvas_field.update(self._operation_data, self._operation_axis)
 
     # Поворот детали
     def rotate_detail(self):

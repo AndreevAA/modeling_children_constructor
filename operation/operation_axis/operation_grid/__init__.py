@@ -248,3 +248,4 @@ class OperationGrid:
 
     def zoom(self, base_vertex, zoom_coefficient):
         self.delta_grid.delta_grid_m = self.delta_grid.delta_grid_m * zoom_coefficient
+

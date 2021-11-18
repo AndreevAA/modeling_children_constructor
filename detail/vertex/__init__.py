@@ -1,6 +1,11 @@
 # Зуммирование точки относительно точки
-def zoom_vertex_by_base_vertex(vertex, base_vertex, zoom_coefficient):
+from math import cos, sin
 
+import config
+import detail
+
+
+def zoom_vertex_by_base_vertex(vertex, base_vertex, zoom_coefficient):
     # Результирующая точка после зуммирования
     result_vertex = vertex
 
@@ -16,9 +21,56 @@ def zoom_vertex_by_base_vertex(vertex, base_vertex, zoom_coefficient):
 
     return result_vertex
 
+
+# Поворот точки относительно точки
+def rotate_vertex_by_base_vertex(pivot_point, base_point, rotation_way, rotation_degree):
+    # Смещение оси поворота
+    result_point = detail.vertex.Vertex(pivot_point.x - base_point.x,
+                                        pivot_point.y - base_point.y,
+                                        pivot_point.z - base_point.z)
+
+    # Координату повернутой точки
+    x_rotated_result_point = None
+    y_rotated_result_point = None
+    z_rotated_result_point = None
+
+    # Выявление оси и смена значений
+    if rotation_way == config.AXIS_X:
+        x_rotated_result_point = result_point.x
+        y_rotated_result_point = result_point.y * cos(rotation_degree) - \
+                                 result_point.z * sin(rotation_degree)
+        z_rotated_result_point = result_point.y * sin(rotation_degree) + \
+                                 result_point.z * cos(rotation_degree)
+
+    elif rotation_way == config.AXIS_Y:
+        x_rotated_result_point = result_point.x * cos(rotation_degree) + \
+                                 result_point.z * sin(rotation_degree)
+        y_rotated_result_point = result_point.y
+        z_rotated_result_point = - result_point.x * sin(rotation_degree) + \
+                                 result_point.z * cos(rotation_degree)
+        # result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
+
+    elif rotation_way == config.AXIS_Z:
+        x_rotated_result_point = result_point.x * cos(rotation_degree) - \
+                                 result_point.y * sin(rotation_degree)
+        y_rotated_result_point = result_point.x * sin(rotation_degree) + \
+                                 result_point.y * cos(rotation_degree)
+        z_rotated_result_point = result_point.z
+        # result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
+
+    # Обновление координат в виртуальной точке
+    result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
+
+    # Возврат оси поворота
+    result_point = detail.vertex.Vertex(result_point.get_x_position() + base_point.get_x_position(),
+                                        result_point.get_y_position() + base_point.get_y_position(),
+                                        result_point.get_y_position() + base_point.get_y_position())
+
+    return result_point
+
+
 # Объект точки в пространстве
 class Vertex:
-
     # Приватные поля координаты точки
     _x_position = None
     _y_position = None

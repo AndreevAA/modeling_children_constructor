@@ -52,7 +52,15 @@ class Axis:
 
     @property
     def second_vertex(self):
-        return self.second_vertex
+        return self._second_vertex
+
+    @first_vertex.setter
+    def first_vertex(self, value):
+        self._first_vertex = value
+
+    @second_vertex.setter
+    def second_vertex(self, value):
+        self._second_vertex = value
 
     def draw(self, _canvas_field):
         _canvas_field.create_line(self._first_vertex.get_x_position(),
@@ -60,6 +68,20 @@ class Axis:
                                   self._second_vertex.get_x_position(),
                                   self._second_vertex.get_y_position()
                                   )
+
+    def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        self.first_vertex = detail.vertex.rotate_vertex_by_base_vertex(
+            pivot_point=self.first_vertex,
+            base_point=base_vertex,
+            rotation_degree=rotation_degree,
+            rotation_way=rotation_way_axis
+        )
+        self.second_vertex = detail.vertex.rotate_vertex_by_base_vertex(
+            pivot_point=self.first_vertex,
+            base_point=base_vertex,
+            rotation_degree=rotation_degree,
+            rotation_way=rotation_way_axis
+        )
 
 
 class OperationAxes:
@@ -119,6 +141,11 @@ class OperationAxes:
         if base_vertex == _axes_intersection:
             pass
 
+    def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        self._x_axis.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        self._y_axis.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        self._z_axis.rotate(base_vertex, rotation_way_axis, rotation_degree)
+
 
 class OperationGrids:
     _x_grid = operation_grid.OperationGrid(config.AXIS_X)
@@ -142,6 +169,11 @@ class OperationGrids:
         self._x_grid.zoom(base_vertex, zoom_coefficient)
         self._y_grid.zoom(base_vertex, zoom_coefficient)
         self._z_grid.zoom(base_vertex, zoom_coefficient)
+
+    # def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+    #     self._x_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
+    #     self._y_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
+    #     self._z_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
 
 
 class AxesIntersection:
@@ -192,3 +224,8 @@ class OperationAxis:
     def zoom(self, base_vertex, zoom_coefficient):
         self._operation_axes.zoom(base_vertex, zoom_coefficient, self._axes_intersection)
         self._operation_grids.zoom(base_vertex, zoom_coefficient)
+
+    # Поворот осей и сетки
+    def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        self._operation_axes.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        # self._operation_grids.rotate(base_vertex, rotation_way_axis, rotation_degree)
