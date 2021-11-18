@@ -55,3 +55,9 @@ AXIS_X = "x"
 AXIS_Y = "y"
 AXIS_Z = "z"
 
+ZOOM_IMAGE = 1
+
+# Настройки canvas
+CANVAS_WIDTH = 900
+CANVAS_HEIGHT = 600
+

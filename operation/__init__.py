@@ -10,7 +10,6 @@ import operation.operation_axis
 
 # Композиция объектов операции
 class Operation:
-
     # Данные осей
     _operation_axis = None
 
@@ -19,7 +18,6 @@ class Operation:
 
     # Инициализация объект
     def __init__(self):
-
         # Связка объектов операционных деталей
         self._operation_details = operation.operation_detail.OperationDetails()
 
@@ -63,3 +61,49 @@ class Operation:
     #         list_of_all_details_name.append(_temp_detail.get_detail_name())
     #
     #     return list_of_all_details_name
+
+
+# Пакет всех объектов для удобства передачи
+class OperationObjects:
+
+    # Данные осей
+    __operation_axis = None
+
+    # Приватные поля
+    __operation_details = None
+
+    # Установлен ли operation_axis
+    def is_set_operation_axis(self):
+        if self.operation_axis is not None:
+            return config.SUCCESS_STATUS
+        return config.ERROR_STATUS
+
+    # Установлен ли operation_details
+    def is_set_operation_details(self):
+        if self.operation_details is not None:
+            return config.SUCCESS_STATUS
+        return config.ERROR_STATUS
+
+    @property
+    def operation_axis(self):
+        return self.__operation_axis
+
+    @property
+    def operation_details(self):
+        return self.__operation_details
+
+    @operation_axis.setter
+    def operation_axis(self, value):
+        self.__operation_axis = value
+
+    @operation_details.setter
+    def operation_details(self, value):
+        self.__operation_details = value
+
+    @operation_axis.deleter
+    def operation_axis(self):
+        self.__operation_axis = None
+
+    @operation_details.deleter
+    def operation_details(self):
+        self.__operation_details = None

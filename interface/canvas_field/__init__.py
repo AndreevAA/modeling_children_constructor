@@ -1,6 +1,8 @@
 # Объект холста Canvas
 from tkinter import Canvas
 
+import config
+
 
 class CanvasField:
 
@@ -18,7 +20,7 @@ class CanvasField:
     def setup(self, _operation_data, _operation_axis):
 
         # Создание холста
-        _temp_canvas = Canvas(self._window, width=400, height=400, bg="lightgrey",
+        _temp_canvas = Canvas(self._window, width=config.CANVAS_WIDTH, height=config.CANVAS_HEIGHT, bg="lightgrey",
                              cursor="pencil")
 
         # Переход от виртуального к реальному
@@ -33,7 +35,7 @@ class CanvasField:
         self._canvas_field.delete("all")
 
         # Отрисовка фона
-        self._canvas_field = Canvas(self._window, width=400, height=400, bg="lightgrey",
+        self._canvas_field = Canvas(self._window, width=config.CANVAS_WIDTH, height=config.CANVAS_HEIGHT, bg="lightgrey",
                              cursor="pencil")
 
         # Отрисовка осей координат
