@@ -223,3 +223,21 @@ class OperationDetails:
                 _error_status = config.SUCCESS_STATUS
 
         return _error_status
+
+    # Зуммирование изображения относительно точки
+    def zoom_by_base_vertex(self, base_vertex, zoom_coefficient):
+
+        # Получение текущей детали из списка деталей
+        for _detail in self._operation_details:
+
+            # Получение текущей компоненты из списка компонентов текущей детали
+            for _component in _detail.get_detail_components():
+
+                # Проход по вершинам компоненты
+                for _vertex in _component.get_component_vertexes():
+
+                    # Зуммирование каждой точки относительно базовой точки на коэфф.
+                    _vertex = detail.vertex.zoom_vertex_by_base_vertex(_vertex,
+                                                                       base_vertex,
+                                                                       zoom_coefficient)
+

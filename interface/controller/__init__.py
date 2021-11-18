@@ -113,6 +113,11 @@ class Controller:
         Button(text="Вправо", command=self.move_scene_right).grid(row=2, column=16, columnspan=1)
         Button(text="Вниз", command=self.move_scene_bottom).grid(row=3, column=15, columnspan=2)
 
+    # Размещение блока перемещения сцены
+    def _set_buttons_zoom_scene(self):
+        Button(text="  +  ", command=self.zoom_scene_in).grid(row=5, column=15, columnspan=1)
+        Button(text="  -  ", command=self.zoom_scene_out).grid(row=5, column=16, columnspan=1)
+
     # Размещение блока кнопок поворота детали
     def _set_button_rotate(self):
         Button(text="Повернуть", command=self.rotate_detail).grid(row=14, column=0, columnspan=2)
@@ -148,6 +153,9 @@ class Controller:
 
         # Размещение блока перемещения сцены
         self._set_buttons_move_scene()
+
+        # Размещение блока зуммирования сцены
+        self._set_buttons_zoom_scene()
 
         # Размещение вводимых данных для поворота
         self._set_inputting_form_data_for_rotation()
@@ -377,3 +385,22 @@ class Controller:
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
+    def zoom_scene_in(self):
+        _base_vertex = self._operation_axis.axes_intersection.intersection_vertex
+        _zoom_coefficient = config.ZOOM_COEFFICIENT
+
+        self._operation_data.zoom_by_base_vertex(_base_vertex, _zoom_coefficient)
+        self._operation_axis.zoom(_base_vertex, _zoom_coefficient)
+
+        # Обновление Canvas
+        self._canvas_field.update(self._operation_data, self._operation_axis)
+
+    def zoom_scene_out(self):
+        _base_vertex = self._operation_axis.axes_intersection.intersection_vertex
+        _zoom_coefficient = 1 / config.ZOOM_COEFFICIENT
+
+        self._operation_data.zoom_by_base_vertex(_base_vertex, _zoom_coefficient)
+        self._operation_axis.zoom(_base_vertex, _zoom_coefficient)
+
+        # Обновление Canvas
+        self._canvas_field.update(self._operation_data, self._operation_axis)

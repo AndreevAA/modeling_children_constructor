@@ -245,3 +245,6 @@ class OperationGrid:
     # Отрисовка сетки
     def draw(self, canvas_field):
         self.__lines_grid.draw(canvas_field)
+
+    def zoom(self, base_vertex, zoom_coefficient):
+        self.delta_grid.delta_grid_m = self.delta_grid.delta_grid_m * zoom_coefficient

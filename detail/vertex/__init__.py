@@ -1,3 +1,21 @@
+# Зуммирование точки относительно точки
+def zoom_vertex_by_base_vertex(vertex, base_vertex, zoom_coefficient):
+
+    # Результирующая точка после зуммирования
+    result_vertex = vertex
+
+    # Определение разницы
+    x_delta = vertex.x - base_vertex.x
+    y_delta = vertex.y - base_vertex.y
+    z_delta = vertex.z - base_vertex.z
+
+    # Непосредственная операция зуммирования
+    result_vertex.x = base_vertex.x + x_delta * zoom_coefficient
+    result_vertex.y = base_vertex.y + y_delta * zoom_coefficient
+    result_vertex.z = base_vertex.z + z_delta * zoom_coefficient
+
+    return result_vertex
+
 # Объект точки в пространстве
 class Vertex:
 

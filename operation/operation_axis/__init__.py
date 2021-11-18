@@ -5,6 +5,7 @@ import config
 import detail
 import operation.operation_axis.operation_grid
 
+
 class Axis:
     _first_vertex = None
     _second_vertex = None
@@ -114,6 +115,10 @@ class OperationAxes:
         self._y_axis.draw(canvas_field)
         self._z_axis.draw(canvas_field)
 
+    def zoom(self, base_vertex, zoom_coefficient, _axes_intersection):
+        if base_vertex == _axes_intersection:
+            pass
+
 
 class OperationGrids:
     _x_grid = operation_grid.OperationGrid(config.AXIS_X)
@@ -133,9 +138,47 @@ class OperationGrids:
         self._y_grid.move(x, y, z)
         self._z_grid.move(x, y, z)
 
+    def zoom(self, base_vertex, zoom_coefficient):
+        self._x_grid.zoom(base_vertex, zoom_coefficient)
+        self._y_grid.zoom(base_vertex, zoom_coefficient)
+        self._z_grid.zoom(base_vertex, zoom_coefficient)
+
+
+class AxesIntersection:
+    __intersection_vertex = None
+
+    def __init__(self):
+        self.set_default_intersection_vertex()
+
+    def set_default_intersection_vertex(self):
+        self.intersection_vertex = detail.vertex.Vertex(
+            0, 0, 0
+        )
+
+    @property
+    def intersection_vertex(self):
+        return self.__intersection_vertex
+
+    @intersection_vertex.setter
+    def intersection_vertex(self, value):
+        self.__intersection_vertex = value
+
+    def move(self, x, y, z):
+        self.intersection_vertex = detail.vertex.Vertex(
+            self.intersection_vertex.x + x,
+            self.intersection_vertex.y + y,
+            self.intersection_vertex.z + z
+        )
+
+
 class OperationAxis:
     _operation_axes = OperationAxes()
+    _axes_intersection = AxesIntersection()
     _operation_grids = OperationGrids()
+
+    @property
+    def axes_intersection(self):
+        return self._axes_intersection
 
     def draw(self, _canvas_field):
         self._operation_axes.draw(_canvas_field)
@@ -143,4 +186,9 @@ class OperationAxis:
 
     def move(self, x, y, z):
         self._operation_axes.move(x, y, z)
+        self._axes_intersection.move(x, y, z)
         self._operation_grids.move(x, y, z)
+
+    def zoom(self, base_vertex, zoom_coefficient):
+        self._operation_axes.zoom(base_vertex, zoom_coefficient, self._axes_intersection)
+        self._operation_grids.zoom(base_vertex, zoom_coefficient)
