@@ -90,11 +90,6 @@ class Line:
         return self.__width
 
     def draw(self, canvas_field):
-        # print()
-        # print(self.first_vertex.x,
-        #                          self.first_vertex.y,
-        #                          self.second_vertex.x,
-        #                          self.second_vertex.y)
         canvas_field.create_line(self.first_vertex.get_x_position(),
                                  self.first_vertex.get_y_position(),
                                  self.second_vertex.get_x_position(),
@@ -102,6 +97,20 @@ class Line:
                                  fill=self.color,
                                  width=self.width
                                  )
+
+    def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        self.first_vertex = detail.vertex.rotate_vertex_by_base_vertex(
+            pivot_point=self.first_vertex,
+            base_point=base_vertex,
+            rotation_degree=rotation_degree,
+            rotation_way=rotation_way_axis
+        )
+        self.second_vertex = detail.vertex.rotate_vertex_by_base_vertex(
+            pivot_point=self.second_vertex,
+            base_point=base_vertex,
+            rotation_degree=rotation_degree,
+            rotation_way=rotation_way_axis
+        )
 
 
 # Объект линий сетки
@@ -206,6 +215,10 @@ class LinesGrid:
         for line in self.__lines_grid:
             line.draw(canvas_field)
 
+    def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        for line in self.__lines_grid:
+            line.rotate(base_vertex, rotation_way_axis, rotation_degree)
+
 
 # Объект операционной сетки
 class OperationGrid:
@@ -248,4 +261,8 @@ class OperationGrid:
 
     def zoom(self, base_vertex, zoom_coefficient):
         self.delta_grid.delta_grid_m = self.delta_grid.delta_grid_m * zoom_coefficient
+
+    def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        self.__lines_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
+
 

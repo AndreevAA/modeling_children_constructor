@@ -395,12 +395,13 @@ class Controller:
 
         _base_vertex = self._operation_axis.axes_intersection.intersection_vertex
 
-        print("_base_vertex: ", _base_vertex.x, _base_vertex.y, _base_vertex.z)
+        # print("_base_vertex: ", _base_vertex.x, _base_vertex.y, _base_vertex.z)
 
         if _scene_degree is not None:
             self._operation_axis.rotate(
                 _base_vertex, _rotation_way_axis, _scene_degree
             )
+            self._operation_data.rotate_details(_base_vertex, _rotation_way_axis, _scene_degree)
 
         # Обновление Canvas
         self._canvas_field.update(self._operation_data, self._operation_axis)

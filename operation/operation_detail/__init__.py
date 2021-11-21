@@ -143,44 +143,6 @@ class OperationDetails:
 
         return _error_status
 
-    # Поворот точки
-    # def _rotate_vertex(self, pivot_point, base_point, rotation_way, degree):
-    #
-    #     # Смещение оси поворота
-    #     result_point = detail.vertex.Vertex(pivot_point.get_x_position() - base_point.get_x_position(),
-    #                                         pivot_point.get_y_position() - base_point.get_y_position(),
-    #                                         pivot_point.get_y_position() - base_point.get_y_position())
-    #
-    #     # Выявление оси и смена значений
-    #     if rotation_way == "Ось X":
-    #         x_rotated_result_point = result_point.get_x_position()
-    #         y_rotated_result_point = result_point.get_y_position() * cos(degree) - \
-    #                                  result_point.get_z_position() * sin(degree)
-    #         z_rotated_result_point = result_point.get_y_position() * sin(degree) + \
-    #                                  result_point.get_z_position() * cos(degree)
-    #         result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
-    #     elif rotation_way == "Ось Y":
-    #         x_rotated_result_point = result_point.get_x_position() * cos(degree) + \
-    #                                  result_point.get_z_position() * sin(degree)
-    #         y_rotated_result_point = result_point.get_y_position()
-    #         z_rotated_result_point = - result_point.get_x_position() * sin(degree) + \
-    #                                  result_point.get_z_position() * cos(degree)
-    #         result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
-    #     elif rotation_way == "Ось Z":
-    #         x_rotated_result_point = result_point.get_x_position() * cos(degree) - \
-    #                                  result_point.get_y_position() * sin(degree)
-    #         y_rotated_result_point = result_point.get_x_position() * sin(degree) + \
-    #                                  result_point.get_y_position() * cos(degree)
-    #         z_rotated_result_point = result_point.get_z_position()
-    #         result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
-    #
-    #     # Возврат оси поворота
-    #     result_point = detail.vertex.Vertex(result_point.get_x_position() + base_point.get_x_position(),
-    #                                         result_point.get_y_position() + base_point.get_y_position(),
-    #                                         result_point.get_y_position() + base_point.get_y_position())
-    #
-    #     return result_point
-
     # Получение базовой точкиъ
     def _get_base_point(self, _detail):
 
@@ -226,6 +188,18 @@ class OperationDetails:
                 _error_status = config.SUCCESS_STATUS
 
         return _error_status
+
+    # Поворот всех деталей
+    def rotate_details(self, _base_vertex, _rotation_way_axis, _scene_degree):
+        for _moving_details in self.get_operation_details():
+            for _moving_component in _moving_details.get_detail_components():
+                for _moving_vertex in _moving_component.get_component_vertexes():
+                    result_point = detail.vertex.rotate_vertex_by_base_vertex(_moving_vertex, _base_vertex,
+                                                                              _rotation_way_axis, _scene_degree)
+                    _moving_vertex.update(result_point.get_x_position(),
+                                          result_point.get_y_position(),
+                                          result_point.get_z_position())
+
 
     # Зуммирование изображения относительно точки
     def zoom_by_base_vertex(self, base_vertex, zoom_coefficient):

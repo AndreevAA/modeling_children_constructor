@@ -175,10 +175,10 @@ class OperationGrids:
         self._y_grid.zoom(base_vertex, zoom_coefficient)
         self._z_grid.zoom(base_vertex, zoom_coefficient)
 
-    # def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
-    #     self._x_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
-    #     self._y_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
-    #     self._z_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
+    def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        self._x_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        self._y_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        self._z_grid.rotate(base_vertex, rotation_way_axis, rotation_degree)
 
 
 class AxesIntersection:
@@ -233,4 +233,4 @@ class OperationAxis:
     # Поворот осей и сетки
     def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
         self._operation_axes.rotate(base_vertex, rotation_way_axis, rotation_degree)
-        # self._operation_grids.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        self._operation_grids.rotate(base_vertex, rotation_way_axis, rotation_degree)
