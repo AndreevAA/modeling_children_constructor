@@ -77,7 +77,7 @@ class Axis:
             rotation_way=rotation_way_axis
         )
         self.second_vertex = detail.vertex.rotate_vertex_by_base_vertex(
-            pivot_point=self.first_vertex,
+            pivot_point=self.second_vertex,
             base_point=base_vertex,
             rotation_degree=rotation_degree,
             rotation_way=rotation_way_axis
@@ -142,8 +142,13 @@ class OperationAxes:
             pass
 
     def rotate(self, base_vertex, rotation_way_axis, rotation_degree):
+        print("_x_axis:")
         self._x_axis.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        print()
+        print("_y_axis:")
         self._y_axis.rotate(base_vertex, rotation_way_axis, rotation_degree)
+        print()
+        print("_z_axis:")
         self._z_axis.rotate(base_vertex, rotation_way_axis, rotation_degree)
 
 
@@ -153,11 +158,11 @@ class OperationGrids:
     _z_grid = operation_grid.OperationGrid(config.AXIS_Z)
 
     def draw(self, canvas_field):
-        print("X: ")
+        # print("X: ")
         self._x_grid.draw(canvas_field)
-        print("---\nY: ")
+        # print("---\nY: ")
         self._y_grid.draw(canvas_field)
-        print("---\nZ: ")
+        # print("---\nZ: ")
         self._z_grid.draw(canvas_field)
 
     def move(self, x, y, z):

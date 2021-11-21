@@ -90,11 +90,11 @@ class Line:
         return self.__width
 
     def draw(self, canvas_field):
-        print()
-        print(self.first_vertex.x,
-                                 self.first_vertex.y,
-                                 self.second_vertex.x,
-                                 self.second_vertex.y)
+        # print()
+        # print(self.first_vertex.x,
+        #                          self.first_vertex.y,
+        #                          self.second_vertex.x,
+        #                          self.second_vertex.y)
         canvas_field.create_line(self.first_vertex.get_x_position(),
                                  self.first_vertex.get_y_position(),
                                  self.second_vertex.get_x_position(),
