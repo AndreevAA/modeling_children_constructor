@@ -42,9 +42,14 @@ class CanvasField:
         _operation_axis.draw(self._canvas_field)
 
         # Отрисовка деталей
-        for temp_detail in _operation_data.get_operation_details():
-            print("Рисуется ->")
-            temp_detail.draw(self._canvas_field)
+        # for temp_detail in _operation_data.get_operation_details():
+        #     print("Рисуется ->")
+        #     temp_detail.draw(self._canvas_field)
+
+        # Получение таблицы цветов пикселей на канвасе
+        _pixels_table = _operation_data.get_pixels_table()
+
+        print("Таблица: \n", _pixels_table)
 
         # Упаковка
         self._canvas_field.grid(row=0, column=3, columnspan=10, rowspan=10)

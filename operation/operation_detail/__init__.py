@@ -4,7 +4,7 @@ from math import sin, cos
 import config
 import detail
 import operation.operation_axis
-
+import detail.pixel
 
 class OperationDetails:
     # Количество деталей
@@ -20,6 +20,18 @@ class OperationDetails:
     def __init__(self):
         self._operation_details = config.EMPTY_LIST
         self._number_of_operation_details = config.ZERO_NUMBER
+
+    # Получение таблицы пикселей цветов изображения
+    def get_pixels_table(self):
+
+        # Инициализируем пиксели в наборе экрана
+        pixels_table = [[detail.pixel.Pixel(x, y, None) for x in range(config.CANVAS_WIDTH)]
+                        for y in range(config.CANVAS_HEIGHT)]
+
+        for temp_detail in self._operation_details:
+            for temp_component in temp_detail
+
+        return pixels_table
 
     @property
     def operation_details(self):
