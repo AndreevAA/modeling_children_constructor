@@ -21,6 +21,10 @@ class OperationDetails:
         self._operation_details = config.EMPTY_LIST
         self._number_of_operation_details = config.ZERO_NUMBER
 
+    @property
+    def operation_details(self):
+        return self._operation_details
+
     # Получение количества деталей
     def get_number_of_operation_details(self):
         self._number_of_operation_details = len(self._operation_details)
@@ -200,7 +204,6 @@ class OperationDetails:
                                           result_point.get_y_position(),
                                           result_point.get_z_position())
 
-
     # Зуммирование изображения относительно точки
     def zoom_by_base_vertex(self, base_vertex, zoom_coefficient):
 
@@ -212,9 +215,7 @@ class OperationDetails:
 
                 # Проход по вершинам компоненты
                 for _vertex in _component.get_component_vertexes():
-
                     # Зуммирование каждой точки относительно базовой точки на коэфф.
                     _vertex = detail.vertex.zoom_vertex_by_base_vertex(_vertex,
                                                                        base_vertex,
                                                                        zoom_coefficient)
-

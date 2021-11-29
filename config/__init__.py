@@ -4,6 +4,7 @@
 """
 
 # Статусы ошибок
+import config
 import detail.element_style
 
 SUCCESS_STATUS = 0
@@ -48,8 +49,8 @@ DELTA_GRID_P = 15
 GRID_LINE_COLOR = "gray"
 GRID_LINE_WIDTH = 0.5
 
-ABS_MIN = -100
-ABS_MAX = 100
+ABS_MIN = -1000
+ABS_MAX = 1000
 
 AXIS_X = "x"
 AXIS_Y = "y"
@@ -62,4 +63,10 @@ CANVAS_WIDTH = 900
 CANVAS_HEIGHT = 600
 
 ZOOM_COEFFICIENT = 2
+
+# Настройки источника света
+LIGHT_X_POSITION = config.CANVAS_WIDTH
+LIGHT_Y_POSITION = 0
+LIGHT_Z_POSITION = config.ABS_MAX
+LIGHT_POWER = 10
 

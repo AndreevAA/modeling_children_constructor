@@ -57,17 +57,77 @@ class Component:
         # Список пар координат вершин
         _polygon_pairs_of_vertexes = []
 
+        # y = k*x + b
+        min_x = config.ABS_MAX
+        max_x = config.ABS_MIN
+
+        min_y = config.ABS_MAX
+        max_y = config.ABS_MIN
+
         # Добавление в список пар координат вершин пар вершин
         for _number_of_vertex in _component_face_vertexes:
 
             # Текущая вершина по позиции
             _vertex = self.get_component_vertexes()[int(_number_of_vertex)]
 
+            min_x = min(min_x, _vertex.get_x_position())
+            max_x = max(max_x, _vertex.get_x_position())
+
+            min_y = min(min_y, _vertex.get_y_position())
+            max_y = max(max_y, _vertex.get_y_position())
+
             # Добавление данных текущей вершины
             _polygon_pairs_of_vertexes.append([_vertex.get_x_position(),
                                                _vertex.get_y_position()])
 
-        print(_polygon_pairs_of_vertexes)
+        print("_polygon_pairs_of_vertexes: ", _polygon_pairs_of_vertexes)
+
+        # # pixels = []
+        # #
+        # # for i in range(config.ABS_MAX ** 2):
+        # #     r_p = []
+        # #     for j in range(config.ABS_MAX):
+        # #         r_p.append(None)
+        # #     pixels.append(r_p)
+        # #
+        # # for i in range(0, len(_polygon_pairs_of_vertexes) - 1):
+        # #     y1 = int(_polygon_pairs_of_vertexes[i][1])
+        # #     y2 = int(_polygon_pairs_of_vertexes[i + 1][1])
+        # #     x1 = _polygon_pairs_of_vertexes[i][0]
+        # #     x2 = _polygon_pairs_of_vertexes[i + 1][0]
+        # #
+        # #     if -y1 + y2 != 0 and (x1 - x2) != 0:
+        # #         k = (-y1 + y2) / (x1 - x2)
+        # #         b = k * x1 - y1
+        # #
+        # #         for y in range(y1, y2 + 1):
+        # #             x = (y - b) / k
+        # #
+        # #             for t_x in range(int(x), int(max_x)):
+        # #                 if pixels[y][t_x] is None:
+        # #                     pixels[y][t_x] = self._get_component_style().get_color()
+        # #                 else:
+        # #                     pixels[y][t_x] = None
+        # #             self._get_canvas().create_line(x, y, x, y, fill=self._get_component_style().get_color())
+        #     # else:
+        #     #     for y in range(y1, y2 + 1):
+        #     #         x = (y - b) / k
+        #     #
+        #     #         for t_x in range(x, max_x):
+        #     #             if pixels[y][t_x] is None:
+        #     #                 pixels[y][t_x] = self._get_component_style().get_color()
+        #     #             else:
+        #     #                 pixels[y][t_x] = None
+        #     #         self._get_canvas().create_line(x, y, x, y, fill=self._get_component_style().get_color())
+        #
+        # for y in range(int(min_y), int(max_y)):
+        #     for x in range(int(min_x), int(max_x)):
+        #         if pixels[y][x] is not None:
+        #             self._get_canvas().create_line(x, y, x, y, fill=self._get_component_style().get_color())
+
+        #
+        # for x in range(min_x, max_x):
+
 
         # Отрисовка области
         self._get_canvas().create_polygon(_polygon_pairs_of_vertexes, fill=self._get_component_style().get_color())
@@ -89,16 +149,6 @@ class Component:
             self.__draw_component_face(_component_face_vertexes)
 
         _error_status = config.SUCCESS_STATUS
-
-        # # Виртуализация отрисовки компоненты
-        # try:
-        #     # Проход по всем наборам граней
-        #     for _component_face_vertexes in self.get_component_faces():
-        #         self.__draw_component_face(_component_face_vertexes)
-        #
-        #     _error_status = config.SUCCESS_STATUS
-        # except Exception:
-        #     _error_status = config.ERROR_STATUS
 
         return config.ERROR_STATUS
 

@@ -36,6 +36,10 @@ class Detail:
         # Установка базовой позиции детали
         self._set_basic_detail_position()
 
+    @property
+    def components(self):
+        return self._detail_components
+
     # Получение компоенентов детали
     def get_detail_components(self):
         return self._detail_components
