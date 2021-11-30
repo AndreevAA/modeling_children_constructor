@@ -44,8 +44,13 @@ class CanvasField:
 
         # Отрисовка деталей
         for temp_detail in _operation_data.get_operation_details():
-            print("Рисуется ->")
-            temp_detail.draw(self._canvas_field, _light)
+            # print("Рисуется ->")
+            temp_detail.draw(self._canvas_field, _light, _operation_axis)
+
+        self.canvas_field.create_oval(
+            [_light.x - config.SUN_R, _light.y - config.SUN_R],
+            [_light.x + config.SUN_R, _light.y + config.SUN_R],
+            fill="yellow")
 
         # Получение таблицы цветов пикселей на канвасе
         # _pixels_table = _operation_data.get_pixels_table()
@@ -71,3 +76,11 @@ class CanvasField:
 
         # Упаковка
         self._canvas_field.grid(row=0, column=3, columnspan=10, rowspan=10)
+
+    @property
+    def canvas_field(self):
+        return self._canvas_field
+
+    @canvas_field.setter
+    def canvas_field(self, value):
+        self._canvas_field = value

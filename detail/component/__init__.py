@@ -53,7 +53,7 @@ class Component:
         return self._component_faces
 
     # Отрисовка грани компоненты
-    def __draw_component_face(self, _component_face_vertexes, _light):
+    def __draw_component_face(self, _component_face_vertexes, _light, _operation_axis):
 
         # Список пар координат вершин
         _polygon_pairs_of_vertexes = []
@@ -83,7 +83,7 @@ class Component:
                                                _vertex.get_y_position()])
             _polygon_pairs_of_vertexes_space.append([_vertex.x, _vertex.y, _vertex.z])
 
-        print("_polygon_pairs_of_vertexes: ", _polygon_pairs_of_vertexes)
+        # print("_polygon_pairs_of_vertexes: ", _polygon_pairs_of_vertexes)
 
         # # pixels = []
         # #
@@ -131,18 +131,102 @@ class Component:
         #
         # for x in range(min_x, max_x):
 
+        # print(
+        #     "A(), B(), distance",
+        #     _polygon_pairs_of_vertexes_space,
+        #     _polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[1][0] +
+        #     _polygon_pairs_of_vertexes_space[2][0] / 3,
+        #     _polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[1][1] +
+        #     _polygon_pairs_of_vertexes_space[2][1] / 3,
+        #     _polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[1][2] +
+        #     _polygon_pairs_of_vertexes_space[2][2] / 3,
+        #     _light.x,
+        #     _light.y,
+        #     _light.z,
+        #     detail.vertex.get_distance(
+        #         detail.vertex.Vertex(
+        #             int(_polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[1][0] +
+        #                 _polygon_pairs_of_vertexes_space[2][0] / 3),
+        #             int(_polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[1][1] +
+        #                 _polygon_pairs_of_vertexes_space[2][1] / 3),
+        #             int(_polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[1][2] +
+        #                 _polygon_pairs_of_vertexes_space[2][2] / 3)
+        #         ),
+        #         detail.vertex.Vertex(
+        #             _light.x,
+        #             _light.y,
+        #             _light.z
+        #         )
+        #     )
+        # )
+
+        v_0_mid = detail.vertex.Vertex(
+            (_polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[2][0]) / 2,
+            (_polygon_pairs_of_vertexes_space[1][1] + _polygon_pairs_of_vertexes_space[2][1]) / 2,
+            (_polygon_pairs_of_vertexes_space[1][2] + _polygon_pairs_of_vertexes_space[2][2]) / 2
+        )
+
+        v_1_mid = detail.vertex.Vertex(
+            (_polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[2][0]) / 2,
+            (_polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[2][1]) / 2,
+            (_polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[2][2]) / 2
+        )
+
+        v_2_mid = detail.vertex.Vertex(
+            (_polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[0][0]) / 2,
+            (_polygon_pairs_of_vertexes_space[1][1] + _polygon_pairs_of_vertexes_space[0][1]) / 2,
+            (_polygon_pairs_of_vertexes_space[1][2] + _polygon_pairs_of_vertexes_space[0][2]) / 2
+        )
+
+        z_0_x = v_0_mid.x - _polygon_pairs_of_vertexes_space[0][0]
+        z_0_y = v_0_mid.y - _polygon_pairs_of_vertexes_space[0][1]
+        z_0_z = v_0_mid.z - _polygon_pairs_of_vertexes_space[0][2]
+
+        z_1_x = v_1_mid.x - _polygon_pairs_of_vertexes_space[1][0]
+        z_1_y = v_1_mid.y - _polygon_pairs_of_vertexes_space[1][1]
+        z_1_z = v_1_mid.z - _polygon_pairs_of_vertexes_space[1][2]
+
+        z_2_x = v_2_mid.x - _polygon_pairs_of_vertexes_space[2][0]
+        z_2_y = v_2_mid.y - _polygon_pairs_of_vertexes_space[2][1]
+        z_2_z = v_2_mid.z - _polygon_pairs_of_vertexes_space[2][2]
+
+        I0x = _polygon_pairs_of_vertexes_space[0][0]
+        I0y = _polygon_pairs_of_vertexes_space[0][1]
+        I0z = _polygon_pairs_of_vertexes_space[0][2]
+
+        I1x = _polygon_pairs_of_vertexes_space[1][0]
+        I1y = _polygon_pairs_of_vertexes_space[1][1]
+        I1z = _polygon_pairs_of_vertexes_space[1][2]
+
+        x = 0
+
+        if z_0_y * z_1_x - z_1_y * z_0_x != 0:
+            x = (z_0_x * (I1y - I1x) + I0x * z_0_y * z_1_x - I1x * z_1_y * z_0_x) / \
+                (z_0_y * z_1_x - z_1_y * z_0_x)
+
+        print(_polygon_pairs_of_vertexes_space, x)
+
+        y = I0y
+
+        if z_0_x != 0:
+            y = ((x - I0x) * z_0_y) / z_0_x + I0y
+
         # Текущая интенсивность плоскости
         _temp_face_light_intensive = detail.light.get_intensive(_light, detail.vertex.get_distance(
             detail.vertex.Vertex(
-                int(_polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[2][0] / 3),
-                int(_polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[1][1] +
-                    _polygon_pairs_of_vertexes_space[2][1] / 3),
+                int(x),
+                int(y),
                 int(_polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[1][2] +
                     _polygon_pairs_of_vertexes_space[2][2] / 3)
-            ), _light.position
+            ),
+            detail.vertex.Vertex(
+                _light.x,
+                _light.y,
+                _light.z
+            )
         ))
 
-        # print("_temp_face_light_intensive = ", _temp_face_light_intensive)
+        # print("_temp_face_light_intensive = ", _temp_face_light_intensive * 100000)
 
         r = 255
         g = 0
@@ -153,15 +237,14 @@ class Component:
                min(int(b * _temp_face_light_intensive), 255)
                )
 
-        print("rgb:", rgb)
+        # print("rgb:", rgb)
 
         # Отрисовка области
         # self._get_canvas().create_polygon(_polygon_pairs_of_vertexes, fill=self._get_component_style().get_color())
         self._get_canvas().create_polygon(_polygon_pairs_of_vertexes, fill=detail.pixel.rgb_to_hex( rgb ))
 
-
     # Прототип функции отрисовки компоненты
-    def draw(self, _canvas, _light):
+    def draw(self, _canvas, _light, _operation_axis):
 
         # Установка холста рисования
         self.set_component_canvas(_canvas)
@@ -174,7 +257,7 @@ class Component:
 
         # Проход по всем наборам граней
         for _component_face_vertexes in self.get_component_faces():
-            self.__draw_component_face(_component_face_vertexes, _light)
+            self.__draw_component_face(_component_face_vertexes, _light, _operation_axis)
 
         _error_status = config.SUCCESS_STATUS
 

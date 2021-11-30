@@ -301,6 +301,9 @@ class OperationDetails:
                     _moving_vertex.update(_moving_vertex.get_x_position() + x_move,
                                           _moving_vertex.get_y_position() + y_move,
                                           _moving_vertex.get_z_position() + z_move)
+                    print(_moving_vertex.get_x_position(),
+                          _moving_vertex.get_y_position(),
+                          _moving_vertex.get_z_position())
                 _error_status = config.SUCCESS_STATUS
 
         return _error_status

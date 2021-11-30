@@ -403,6 +403,14 @@ class Controller:
     def move_scene_top(self):
         self._operation_data.move_details(0, +10, 0)
         self._operation_axis.move(0, +10, 0)
+        self._operation_light.move(0, +10, 0)
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
         # Обновление канваса
         self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
@@ -411,6 +419,14 @@ class Controller:
     def move_scene_bottom(self):
         self._operation_data.move_details(0, -10, 0)
         self._operation_axis.move(0, -10, 0)
+        self._operation_light.move(0, -10, 0)
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
         # Обновление канваса
         self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
@@ -419,14 +435,32 @@ class Controller:
     def move_scene_left(self):
         self._operation_data.move_details(-10, 0, 0)
         self._operation_axis.move(-10, 0, 0)
+        self._operation_light.move(-10, 0, 0)
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
         # Обновление канваса
         self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     # Перемещение сцены
     def move_scene_right(self):
+        print("Right")
         self._operation_data.move_details(+10, 0, 0)
         self._operation_axis.move(+10, 0, 0)
+        self._operation_light.move(+10, 0, 0)
+        print("<<")
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
         # Обновление канваса
         self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
@@ -447,6 +481,13 @@ class Controller:
             self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
     # Поворот сцены
     def rotate_scene(self):
@@ -472,9 +513,17 @@ class Controller:
                 _base_vertex, _rotation_way_axis, _scene_degree
             )
             self._operation_data.rotate_details(_base_vertex, _rotation_way_axis, _scene_degree)
+            self._operation_light.rotate(_base_vertex, _rotation_way_axis, _scene_degree)
 
         # Обновление Canvas
         self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
     # Поворот детали
     def rotate_detail(self):
@@ -506,15 +555,32 @@ class Controller:
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
+
+
     def zoom_scene_in(self):
         _base_vertex = self._operation_axis.axes_intersection.intersection_vertex
         _zoom_coefficient = config.ZOOM_COEFFICIENT
 
         self._operation_data.zoom_by_base_vertex(_base_vertex, _zoom_coefficient)
         self._operation_axis.zoom(_base_vertex, _zoom_coefficient)
+        self._operation_light.zoom(_base_vertex, _zoom_coefficient)
 
         # Обновление Canvas
         self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
+
 
     def zoom_scene_out(self):
         _base_vertex = self._operation_axis.axes_intersection.intersection_vertex
@@ -522,9 +588,17 @@ class Controller:
 
         self._operation_data.zoom_by_base_vertex(_base_vertex, _zoom_coefficient)
         self._operation_axis.zoom(_base_vertex, _zoom_coefficient)
+        self._operation_light.zoom(_base_vertex, _zoom_coefficient)
 
         # Обновление Canvas
         self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
+
+        self._free_light_settings_fields()
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
     def _free_light_settings_fields(self):
         self._x_entry.delete(0, "end")

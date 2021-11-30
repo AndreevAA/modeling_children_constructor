@@ -101,9 +101,9 @@ class Detail:
         return self._detail_name
 
     # Отрисовка детали
-    def draw(self, _canvas_field, _light):
+    def draw(self, _canvas_field, _light, _operation_axis):
         for _component in self._detail_components:
-            _component.draw(_canvas_field, _light)
+            _component.draw(_canvas_field, _light, _operation_axis)
 
     # Установка uid
     def generate_uid(self):
