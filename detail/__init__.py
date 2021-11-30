@@ -37,8 +37,44 @@ class Detail:
         self._set_basic_detail_position()
 
     @property
+    def name(self):
+        return self._detail_name
+
+    @name.setter
+    def name(self, value):
+        self._detail_name = value
+
+    @property
+    def position(self):
+        return self._detail_position
+
+    @position.setter
+    def position(self, value):
+        self._detail_position = value
+
+    @property
     def components(self):
         return self._detail_components
+
+    @components.setter
+    def components(self, value):
+        self._detail_components = value
+
+    @property
+    def style(self):
+        return self._detail_style
+
+    @style.setter
+    def style(self, value):
+        self._detail_style = value
+
+    @property
+    def uid(self):
+        return self._detail_uid
+
+    @uid.setter
+    def uid(self, value):
+        self._detail_uid = value
 
     # Получение компоенентов детали
     def get_detail_components(self):
@@ -65,9 +101,9 @@ class Detail:
         return self._detail_name
 
     # Отрисовка детали
-    def draw(self, _canvas_field):
+    def draw(self, _canvas_field, _light):
         for _component in self._detail_components:
-            _component.draw(_canvas_field)
+            _component.draw(_canvas_field, _light)
 
     # Установка uid
     def generate_uid(self):
@@ -231,7 +267,7 @@ class UploadingDetails:
             print(_vertex_note[0], _vertex_note[1], _vertex_note[2])
 
             _faces.append(
-                [_vertex_note[0], _vertex_note[1], _vertex_note[2]]
+                [int(_vertex_note[0]), int(_vertex_note[1]), int(_vertex_note[2])]
             )
 
         return _faces

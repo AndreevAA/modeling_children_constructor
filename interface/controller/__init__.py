@@ -21,10 +21,16 @@ class Controller:
     _axis = None  # Выбранная ось
     _degree = None  # Угол поворота
 
+    _x_entry = None
+    _y_entry = None
+    _z_entry = None
+    _power = None
+
     _controller_frame = None
 
     _operation_data = None
     _operation_axis = None
+    _operation_light = None
 
     _window = None
 
@@ -33,14 +39,21 @@ class Controller:
     _degree_entry = None
 
     # Инициализация объекта панели управления интерфейсом
-    def __init__(self, _operation_data, _operation_axis, _window, _canvas_field):
+    def __init__(self, _operation_data, _operation_axis, _operation_light, _window, _canvas_field):
 
         # Добавление операционных данных
         self._operation_data = _operation_data
         self._operation_axis = _operation_axis
+        self._operation_light = _operation_light
 
         self._window = _window
         self._canvas_field = _canvas_field
+
+        # self._x_entry = self._operation_light.x
+        # self._y_entry = self._operation_light.y
+        # self._z_entry = self._operation_light.z
+        #
+        # self._power = self._operation_light.power
 
     # Размещение блока параллельных кнопок добавления и удаления детали
     def _set_button_choosing_for_adding_details(self):
@@ -90,6 +103,26 @@ class Controller:
         r_d_l.config(font=("Courier", 16, "bold"))
         r_d_l.grid(row=0, column=15, columnspan=2, pady=(20, 10), sticky=W)
 
+        r_i_l = Label(text="Источник света", justify=LEFT)
+        r_i_l.config(font=("Courier", 16, "bold"))
+        r_i_l.grid(row=9, column=15, columnspan=2, pady=(20, 10), sticky=W)
+
+        l_x_i = Label(text="X:", justify=LEFT)
+        l_x_i.config(font=("Courier", 9))
+        l_x_i.grid(row=10, column=15, columnspan=2, pady=(2, 2), sticky=W)
+
+        l_y_i = Label(text="Y:", justify=LEFT)
+        l_y_i.config(font=("Courier", 9))
+        l_y_i.grid(row=12, column=15, columnspan=2, pady=(2, 2), sticky=W)
+
+        l_z_i = Label(text="Z:", justify=LEFT)
+        l_z_i.config(font=("Courier", 9))
+        l_z_i.grid(row=14, column=15, columnspan=2, pady=(2, 2), sticky=W)
+
+        l_i = Label(text="I:", justify=LEFT)
+        l_i.config(font=("Courier", 9))
+        l_i.grid(row=16, column=15, columnspan=2, pady=(2, 2), sticky=W)
+
     # Размещение списка добавленных деталей
     def _set_box(self):
         # Список добавленных деталей
@@ -126,6 +159,10 @@ class Controller:
     def _set_button_rotate_scene(self):
         Button(text="Повернуть", command=self.rotate_scene).grid(row=8, column=16, columnspan=2)
 
+    # Размещение блока кнопок поворота детали
+    def _set_button_move_set_light(self):
+        Button(text="Изменить источник света", command=self.change_light).grid(row=18, column=15, columnspan=2)
+
     # Размещение вводимых данных для поворота детали
     def _set_inputting_form_data_for_rotation(self):
         # Блок параллельных параметров поворота
@@ -134,6 +171,25 @@ class Controller:
 
         self._degree_entry = Entry(textvariable=self._degree)
         self._degree_entry.grid(row=13, column=0, columnspan=2)
+
+    # Размещение вводимых данных для перемещения ИС
+    def _set_inputting_form_data_for_light(self):
+        self._x_entry = Entry(textvariable=self._x_entry)
+        self._x_entry.grid(row=11, column=15, columnspan=2)
+
+        self._y_entry = Entry(textvariable=self._y_entry)
+        self._y_entry.grid(row=13, column=15, columnspan=2)
+
+        self._z_entry = Entry(textvariable=self._y_entry)
+        self._z_entry.grid(row=15, column=15, columnspan=2)
+
+        self._power = Entry(textvariable=self._power)
+        self._power.grid(row=17, column=15, columnspan=2)
+
+        self._x_entry.insert(0, self._operation_light.x)
+        self._y_entry.insert(0, self._operation_light.y)
+        self._z_entry.insert(0, self._operation_light.z)
+        self._power.insert(0, self._operation_light.power)
 
     # Размещение вводимых данных для поворота сцены
     def _set_inputting_form_data_for_rotation_scene(self):
@@ -176,11 +232,17 @@ class Controller:
         # Размещение вводимых данных для поворота сцены
         self._set_inputting_form_data_for_rotation_scene()
 
+        # Размещение ввода для ИС
+        self._set_inputting_form_data_for_light()
+
         # Размещение кнопки поворота
         self._set_button_rotate()
 
         # Размещение кнопки поворота сцены
         self._set_button_rotate_scene()
+
+        # Размещение кнопки изменение источника света
+        self._set_button_move_set_light()
 
         # Переход от реального к виртуальному
         self._controller = _temp_controller
@@ -204,14 +266,12 @@ class Controller:
         _entry_detail_name = self._entry.get()
 
         # Полученный объект детали
-        _detail = detail.Detail("")
+        _detail = detail.Detail(_entry_detail_name)
 
         # Нахождение выбранной детали
         for _temp_detail in self._operation_data.get_uploaded_details():
             if _temp_detail.get_detail_name() == _entry_detail_name:
-                _detail = _temp_detail
-
-        return _detail
+                return _temp_detail
 
     # Получение направления поворота детали
     def _get_detail_rotation_way(self):
@@ -235,14 +295,24 @@ class Controller:
             # Получение объекта выбраной детали
             _temp_entry_detail = self._get_entry_detail()
 
+            # В памяти
+            _detail = detail.Detail(_temp_entry_detail.name)
+
             # Генерация UID
-            _temp_entry_detail.generate_uid()
+            _detail.generate_uid()
+
+            _detail.position = _temp_entry_detail.position
+            _detail.components = _temp_entry_detail.components
+            _detail.style = _temp_entry_detail.style
+            # _detail = _temp_detail
+
+            print("_detail.name, _detail.uid: ", _detail.name, _detail.uid)
 
             # Добавление выбранной детали в операцинные данные
-            self._operation_data.add_detail(_temp_entry_detail)
+            self._operation_data.add_detail(_detail)
 
             # Добавление в бокс названия добавленного элемента
-            self._box.insert(END, self._entry.get() + " " + str(_temp_entry_detail.get_detail_uid()))
+            self._box.insert(END, self._entry.get() + " " + str(_detail.get_detail_uid()))
 
             # Очистка поля выбора
             self._entry.delete(0, END)
@@ -252,7 +322,7 @@ class Controller:
             print(len(self._operation_data.get_operation_details()))
 
             # Обновление канваса
-            self._canvas_field.update(self._operation_data, self._operation_axis)
+            self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     # Обработка нажатие на удаление детали
     def _delete_detail(self):
@@ -274,7 +344,7 @@ class Controller:
                 print("SIZE: ", len(self._operation_data.get_operation_details()))
 
                 # Обновление канваса
-                self._canvas_field.update(self._operation_data, self._operation_axis)
+                self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -291,7 +361,7 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data, self._operation_axis)
+            self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -308,7 +378,7 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data, self._operation_axis)
+            self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -325,7 +395,7 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data, self._operation_axis)
+            self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -335,7 +405,7 @@ class Controller:
         self._operation_axis.move(0, +10, 0)
 
         # Обновление канваса
-        self._canvas_field.update(self._operation_data, self._operation_axis)
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     # Перемещение сцены
     def move_scene_bottom(self):
@@ -343,7 +413,7 @@ class Controller:
         self._operation_axis.move(0, -10, 0)
 
         # Обновление канваса
-        self._canvas_field.update(self._operation_data, self._operation_axis)
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     # Перемещение сцены
     def move_scene_left(self):
@@ -351,7 +421,7 @@ class Controller:
         self._operation_axis.move(-10, 0, 0)
 
         # Обновление канваса
-        self._canvas_field.update(self._operation_data, self._operation_axis)
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     # Перемещение сцены
     def move_scene_right(self):
@@ -359,7 +429,7 @@ class Controller:
         self._operation_axis.move(+10, 0, 0)
 
         # Обновление канваса
-        self._canvas_field.update(self._operation_data, self._operation_axis)
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     # Перемещение детали вниз
     def move_detail_bottom(self):
@@ -374,7 +444,7 @@ class Controller:
 
             print(element_information)
             # Обновление канваса
-            self._canvas_field.update(self._operation_data, self._operation_axis)
+            self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -404,7 +474,7 @@ class Controller:
             self._operation_data.rotate_details(_base_vertex, _rotation_way_axis, _scene_degree)
 
         # Обновление Canvas
-        self._canvas_field.update(self._operation_data, self._operation_axis)
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     # Поворот детали
     def rotate_detail(self):
@@ -432,7 +502,7 @@ class Controller:
                 self._operation_data.rotate_detail(int(element_information[1]), _detail_degree, _detail_rotation_way)
 
             # Обновление Canvas
-            self._canvas_field.update(self._operation_data, self._operation_axis)
+            self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
             interface.message.Message(config.ERROR_STATUS_DETAIL_TO_ADD_IS_NOT_SELECTED_IN_ENTRY)
 
@@ -444,7 +514,7 @@ class Controller:
         self._operation_axis.zoom(_base_vertex, _zoom_coefficient)
 
         # Обновление Canvas
-        self._canvas_field.update(self._operation_data, self._operation_axis)
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
 
     def zoom_scene_out(self):
         _base_vertex = self._operation_axis.axes_intersection.intersection_vertex
@@ -454,4 +524,46 @@ class Controller:
         self._operation_axis.zoom(_base_vertex, _zoom_coefficient)
 
         # Обновление Canvas
-        self._canvas_field.update(self._operation_data, self._operation_axis)
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
+
+    def _free_light_settings_fields(self):
+        self._x_entry.delete(0, "end")
+        self._y_entry.delete(0, "end")
+        self._z_entry.delete(0, "end")
+        self._power.delete(0, "end")
+
+    def change_light(self):
+
+        _x_entry = None
+        _y_entry = None
+        _z_entry = None
+        _power = None
+
+        # Получение угла поворота фигуры
+        try:
+            _x_entry = int(self._x_entry.get())
+            _y_entry = int(self._y_entry.get())
+            _z_entry = int(self._z_entry.get())
+            _power = int(self._power.get())
+        except Exception:
+            interface.message.Message(config.ERROR_STATUS_DETAIL_ERROR_DEGREE)
+
+        if _x_entry is not None and \
+            _y_entry is not None and \
+            _z_entry is not None and \
+            _power is not None:
+
+            self._operation_light.x = _x_entry
+            self._operation_light.y = _y_entry
+            self._operation_light.z = _z_entry
+            self._operation_light.power = _power
+
+            self._free_light_settings_fields()
+
+            self._x_entry.insert(0, _x_entry)
+            self._y_entry.insert(0, _y_entry)
+            self._z_entry.insert(0, _z_entry)
+            self._power.insert(0, _power)
+
+        # Обновление Canvas
+        self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)

@@ -15,3 +15,7 @@ class ElementStyle:
     # Обновление цвета элемента
     def update_color(self, _color):
         self._color = _color
+
+    @property
+    def color(self):
+        return self._color

@@ -1,8 +1,16 @@
 # Зуммирование точки относительно точки
+import math
 from math import cos, sin
 
 import config
 import detail
+
+
+# Определение расстояния между точками
+def get_distance(_f_vertex, _s_vertex):
+    return math.sqrt((_s_vertex.x - _f_vertex.x) ** 2 +
+                     (_s_vertex.y - _f_vertex.y) ** 2 +
+                     (_s_vertex.z - _f_vertex.z) ** 2) ** 2
 
 
 def zoom_vertex_by_base_vertex(vertex, base_vertex, zoom_coefficient):

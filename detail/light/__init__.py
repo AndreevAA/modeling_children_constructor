@@ -1,4 +1,9 @@
 
+# Определение интенсивности
+def get_intensive(_light, _distance):
+    return _light.power / (_distance ** 2)
+
+
 # Объект источника света
 class Light:
     # Позиция света

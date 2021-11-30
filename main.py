@@ -3,11 +3,14 @@
 # Основной блок программы
 import config
 import detail
+from detail.light import Light
+from detail.vertex import Vertex
 from interface import Interface
 from operation import Operation
 from operation.operation_detail import OperationDetails
 
 import operation.operation_axis
+
 
 def main():
     # Подгрузка данных
@@ -24,12 +27,15 @@ def main():
         # Передача операционных данных
         _operation.update_uploaded_details(_uploaded_details.get_uploaded_details())
 
+        # Инициализация источника света
+        _light = Light(_position=Vertex(100, 100, 100),
+                       _power=100000000)
+
         # Запуск интерефейса
-        Interface(_operation_data=_operation, _operation_axis=operation.operation_axis.OperationAxis())
+        Interface(_operation_data=_operation, _operation_axis=operation.operation_axis.OperationAxis(),
+                  _operation_light=_light)
 
 
 # Старт программы
 if __name__ == '__main__':
     main()
-
-
