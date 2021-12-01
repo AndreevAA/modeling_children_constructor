@@ -28,8 +28,8 @@ def main():
         _operation.update_uploaded_details(_uploaded_details.get_uploaded_details())
 
         # Инициализация источника света
-        _light = Light(_position=Vertex(100, 100, 100),
-                       _power=100000000)
+        _light = Light(_position=Vertex(700, 400, 300),
+                       _power=100000000000)
 
         # Запуск интерефейса
         Interface(_operation_data=_operation, _operation_axis=operation.operation_axis.OperationAxis(),

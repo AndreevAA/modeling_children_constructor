@@ -4,7 +4,7 @@ import detail
 
 
 def get_intensive(_light, _distance):
-    return _light.power / (_distance ** 2)
+    return _light.power / (10 + _distance ** 2)
 
 
 # Объект источника света

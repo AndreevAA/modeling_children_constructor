@@ -11,6 +11,8 @@ import detail.element_style
 from detail import vertex
 from detail.component import Component
 
+from math import *
+
 
 class Deep:
     component = None
@@ -189,16 +191,16 @@ class Detail:
 
             new_d_comp[i] = Deep(new_d_comp[i], z_index)
 
-        sorted(new_d_comp, key=lambda Deep: Deep.z_index)
+        new_d_comp = sorted(new_d_comp, key=lambda d: d.z_index)
 
+        # print("len(new_d_comp)", len(new_d_comp))
         for i in range(len(new_d_comp)):
+            # print("new_d_comp[i].z_index: ", new_d_comp[i].z_index)
             self._detail_components[i] = new_d_comp[i].component
 
     # Отрисовка детали
     def draw(self, _canvas_field, _light, _operation_axis):
-
         self._sort_by_z_index()
-
         for _component in self._detail_components:
             _component.draw(_canvas_field, _light, _operation_axis)
 
@@ -209,6 +211,61 @@ class Detail:
     # Получение значения адреса
     def get_detail_uid(self):
         return self._detail_uid
+
+    def is_vertex_in_sq(self, _vertex, f_t, s_t, t_t):
+        a = detail.vertex.get_distance(f_t, s_t)
+        b = detail.vertex.get_distance(f_t, t_t)
+        c = detail.vertex.get_distance(s_t, s_t)
+
+        p = (a + b + c) / 2
+        s = sqrt(p * (p - a) * (p - b) * (p - c))
+
+        t1 = detail.vertex.get_distance(_vertex, f_t)
+        t2 = detail.vertex.get_distance(_vertex, s_t)
+        t3 = detail.vertex.get_distance(_vertex, t_t)
+
+        p1 = (a + t1 + t2) / 2
+        p2 = (b + t2 + t3) / 2
+        p3 = (c + t3 + t1) / 2
+
+        s1 = sqrt(p1 * (p1 - a) * (p1 - t1) * (p1 - t2))
+        s2 = sqrt(p2 * (p2 - b) * (p2 - t2) * (p2 - t3))
+        s3 = sqrt(p3 * (p3 - c) * (p3 - t3) * (p3 - t1))
+
+        if (s1 + s2 + s3) * 0.7 <= s <= (s1 + s2 + s3) * 1.3:
+            return True
+        return False
+
+
+    def is_component_face_component(self, _face, _vertexes):
+        _all_vertexes = []
+        _all_faces = []
+
+        for temp_component in self.components:
+            temp_vertexes = temp_component.vertexs
+            new_faces = []
+            for temp_faces in temp_component.faces:
+                    new_faces.append(
+                        [
+                            temp_faces[0] + len(_all_vertexes),
+                            temp_faces[1] + len(_all_vertexes),
+                            temp_faces[2] + len(_all_vertexes)
+                        ]
+                    )
+            _all_vertexes += temp_vertexes
+            _all_faces += new_faces
+
+        f_t = _vertexes[_face[0]]
+        s_t = _vertexes[_face[1]]
+        t_t = _vertexes[_face[2]]
+
+        for temp_face in _face:
+            if self.is_vertex_in_sq(
+                
+            ):
+                return False
+
+        return True
 
 
 # Объект загрузки данных из файлов
@@ -341,14 +398,14 @@ class UploadingDetails:
         for _vertex_file_string in range(self._file_string, self._file_string + _number_of_vertexes):
             _vertex_note = list(map(float, self.get_file_row_data()[_vertex_file_string].split()))
 
-            print(_vertex_note[0], _vertex_note[1], _vertex_note[2])
+            # # print(_vertex_note[0], _vertex_note[1], _vertex_note[2])
 
             _vertexes.append(
                 detail.vertex.Vertex(_vertex_note[0], _vertex_note[1], _vertex_note[2])
             )
         #
         # for i in _vertexes:
-        #     print("YY", i.get_x_position(), i.get_y_position(), i.get_z_position())
+        #     # print("YY", i.get_x_position(), i.get_y_position(), i.get_z_position())
 
         return _vertexes
 
@@ -361,7 +418,7 @@ class UploadingDetails:
         for _faces_file_string in range(self._file_string, self._file_string + _number_of_faces):
             _vertex_note = list(map(float, self.get_file_row_data()[_faces_file_string].split()))
 
-            print(_vertex_note[0], _vertex_note[1], _vertex_note[2])
+            # print(_vertex_note[0], _vertex_note[1], _vertex_note[2])
 
             _faces.append(
                 [int(_vertex_note[0]), int(_vertex_note[1]), int(_vertex_note[2])]
@@ -387,12 +444,12 @@ class UploadingDetails:
         number_of_steps = int(self.get_file_row_data()[self._file_string])
         self._file_string += 1
 
-        print(cylinder_f[0],
-            cylinder_f[1],
-            cylinder_f[2])
-        print(height)
-        print(radius)
-        print(number_of_steps)
+        # print(cylinder_f[0],
+        #     cylinder_f[1],
+        #     cylinder_f[2])
+        # print(height)
+        # print(radius)
+        # print(number_of_steps)
 
         return detail.component.Cylinder(
             _component_name=_component_name,
@@ -415,7 +472,7 @@ class UploadingDetails:
         for _reading_component in range(_number_of_components):
             _component_name = str(self.get_file_row_data()[self._file_string])
             self._file_string += 1
-            print(_component_name)
+            # print(_component_name)
 
             if _component_name == "Цилиндр":
                 _detail_components.append(
@@ -425,7 +482,7 @@ class UploadingDetails:
             else:
                 _number_of_vertexes = self.__read_number_of_vertexes()
                 self._file_string += 1
-                print(_number_of_vertexes)
+                # print(_number_of_vertexes)
 
                 _vertexes = self.__read_vertexes(_number_of_vertexes)
                 self._file_string += _number_of_vertexes
@@ -433,7 +490,7 @@ class UploadingDetails:
                 _number_of_faces = self.__read_number_of_faces()
                 self._file_string += 1
 
-                print(_number_of_faces)
+                # print(_number_of_faces)
                 _faces = self.__read_faces(_number_of_faces)
                 self._file_string += _number_of_faces
 
@@ -461,34 +518,34 @@ class UploadingDetails:
             while self._file_string < len(self.get_file_row_data()):
                 _detail_name = self.__read_detail_name()
                 self._file_string += 1
-                # print("Название детали:", _detail_name)
+                # # print("Название детали:", _detail_name)
 
                 _color = self.__read_detail_color()
                 self._file_string += 1
-                # print("Цвет детали:", _color)
+                # # print("Цвет детали:", _color)
 
                 _number_of_components = self.__read_number_of_components()
                 self._file_string += 1
-                # print("Количество компонентов:", _number_of_components)
+                # # print("Количество компонентов:", _number_of_components)
 
                 _detail_style = detail.element_style.ElementStyle(_color)
 
                 _detail_components = self.__read_detail_components(_number_of_components, _detail_style)
 
-                # print(Detail(_detail_name))
+                # # print(Detail(_detail_name))
 
                 _temp_uploaded_detail = Detail(_detail_name)
-                # print(_temp_uploaded_detail)
-                # print(_temp_uploaded_detail.get_detail_name())
+                # # print(_temp_uploaded_detail)
+                # # print(_temp_uploaded_detail.get_detail_name())
 
                 _temp_uploaded_detail.set_detail_style(_detail_style)
                 _temp_uploaded_detail.set_detail_components(_detail_components)
-                # print(_temp_uploaded_detail)
+                # # print(_temp_uploaded_detail)
 
-                # print(len(self._uploaded_details))
+                # # print(len(self._uploaded_details))
                 self._uploaded_details.append(_temp_uploaded_detail)
 
-                # print(self._uploaded_details[0].get_detail_name())
+                # # print(self._uploaded_details[0].get_detail_name())
 
             _error_status = config.SUCCESS_STATUS
         except Exception:
@@ -506,14 +563,14 @@ class UploadingDetails:
         if _error_status == config.SUCCESS_STATUS:
             _error_status = self._get_number_of_details_form_row_file_data()
         #
-        # print("Количество деталей:", self._number_of_uploaded_details)
+        # # print("Количество деталей:", self._number_of_uploaded_details)
 
         # Проверка на успешность получения количества деталей
         if _error_status == config.SUCCESS_STATUS:
             _error_status = self._get_uploaded_details()
 
         # for _detail in self._uploaded_details:
-        #     print(_detail._color)
+        #     # print(_detail._color)
 
         return _error_status
 
@@ -522,16 +579,18 @@ class UploadingDetails:
         return self._uploaded_details
 
     # Вывести загруженных данных
-    def out_uploading_details_information(self):
-        for _detail in self._uploaded_details:
-            print(_detail.get_detail_name())
-            for _component in _detail.get_detail_components():
-                vertexes = _component.get_component_vertexes()
+    # def out_uploading_details_information(self):
+    #     for _detail in self._uploaded_details:
+    #         # print(_detail.get_detail_name())
+    #         for _component in _detail.get_detail_components():
+    #             vertexes = _component.get_component_vertexes()
+    #
+    #             for i in vertexes:
+    #                 # print(i.get_x_position(), i.get_y_position(), i.get_z_position())
+    #
+    #             faces = _component.get_component_faces()
+    #
+    #             for i in faces:
+    #                 # print(i[0], i[1], i[2])
 
-                for i in vertexes:
-                    print(i.get_x_position(), i.get_y_position(), i.get_z_position())
 
-                faces = _component.get_component_faces()
-
-                for i in faces:
-                    print(i[0], i[1], i[2])

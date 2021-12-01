@@ -35,8 +35,8 @@ class OperationDetails:
         # Инициализируем пиксели в наборе экрана
         all_details_pixels_table = pixel.PixelsTable(config.CANVAS_WIDTH, config.CANVAS_HEIGHT, 0, 0)
         #
-        # print("len(pixels_table) = ", len(pixels_table), config.CANVAS_HEIGHT)
-        # print("len(pixels_table[0]) = ", len(pixels_table[0]), config.CANVAS_WIDTH)
+        # # print("len(pixels_table) = ", len(pixels_table), config.CANVAS_HEIGHT)
+        # # print("len(pixels_table[0]) = ", len(pixels_table[0]), config.CANVAS_WIDTH)
 
         used = []
 
@@ -54,7 +54,7 @@ class OperationDetails:
                     y_min = min(y_min, temp_vertex.y)
                     y_max = max(y_max, temp_vertex.y)
 
-                print("x_max - x_min, y_max - y_min, x_min, y_min: ", min(config.CANVAS_WIDTH, x_max) - max(0, x_min), min(config.CANVAS_HEIGHT, y_max) - max(0, y_min), max(0, x_min), max(y_min, 0))
+                # print("x_max - x_min, y_max - y_min, x_min, y_min: ", min(config.CANVAS_WIDTH, x_max) - max(0, x_min), min(config.CANVAS_HEIGHT, y_max) - max(0, y_min), max(0, x_min), max(y_min, 0))
 
                 component_pixels_table = pixel.PixelsTable(min(config.CANVAS_WIDTH, x_max) - max(0, x_min), min(config.CANVAS_HEIGHT, y_max) - max(0, y_min), max(0, x_min), max(y_min, 0))
 
@@ -67,7 +67,7 @@ class OperationDetails:
                     #                                vertexes[temp_face[1]].y - vertexes[temp_face[0]].y, vertexes[temp_face[2]].y - vertexes[temp_face[0]].y)
                     # D = -vertexes[temp_face[0]].x * A + vertexes[temp_face[0]].y * B - vertexes[temp_face[0]].z * C
                     #
-                    # print("A, B, C, D: ", A, B, C, D)
+                    # # print("A, B, C, D: ", A, B, C, D)
 
                     for i in range(len(temp_face)):
 
@@ -95,13 +95,13 @@ class OperationDetails:
                             # Наклонная
                             if f_v.y != s_v.y and f_v.x != s_v.x:
 
-                                print()
-                                print("Рассматривается: ")
+                                # print()
+                                # print("Рассматривается: ")
 
-                                if i < len(temp_face) - 1:
-                                    print(temp_face[i], temp_face[i + 1])
-                                elif i == len(temp_face) - 1:
-                                    print(temp_face[i], temp_face[0])
+                                # if i < len(temp_face) - 1:
+                                #     # print(temp_face[i], temp_face[i + 1])
+                                # elif i == len(temp_face) - 1:
+                                #     # print(temp_face[i], temp_face[0])
 
                                 for y in range(max(0, int(min(f_v.y, s_v.y))), max(0, int(max(f_v.y, s_v.y)))):
 
@@ -111,27 +111,27 @@ class OperationDetails:
 
                                     left_x = int((y - b) / k)
 
-                                    # print("left_x: , y", left_x, y, k, b)
+                                    # # print("left_x: , y", left_x, y, k, b)
 
                                     for x in range(left_x, int(component_pixels_table.width)):
                                         if x > 0 and y > 0:
-                                            # print(x, y, k, b)
+                                            # # print(x, y, k, b)
                                             _pixel = pixel.Pixel(x, y, 0)
                                             _pixel.color = temp_component.style.color
                                             component_pixels_table.xor_pixel(x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), pixel.Pixel(x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), _pixel))
 
                             # Вертикальная
                             if f_v.x == s_v.x:
-                                print("f_v.x == s_v.x: ", f_v.x == s_v.x, f_v.x, f_v.y, s_v.x, s_v.y)
+                                # print("f_v.x == s_v.x: ", f_v.x == s_v.x, f_v.x, f_v.y, s_v.x, s_v.y)
 
                                 for y in range(int(min(f_v.y, s_v.y)), int(max(f_v.y, s_v.y))):
                                     for x in range(int(f_v.x), int(component_pixels_table.width)):
 
                                         if x > 0 and y > 0:
-                                            print(
-                                                "x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), 0",
-                                                x - int(component_pixels_table.s_x),
-                                                y - int(component_pixels_table.s_y), 0)
+                                            # print(
+                                            #     "x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), 0",
+                                            #     x - int(component_pixels_table.s_x),
+                                            #     y - int(component_pixels_table.s_y), 0)
 
                                             _pixel = pixel.Pixel(x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), 0)
                                             _pixel.color = temp_component.style.color
@@ -142,10 +142,10 @@ class OperationDetails:
                                 for x in range(int(min(f_v.x, s_v.x)), int(component_pixels_table.width)):
 
                                     if x > 0 and f_v.y > 0:
-                                        print(
-                                            "x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), 0",
-                                            x - int(component_pixels_table.s_x),
-                                            int(f_v.y) - int(component_pixels_table.s_y), 0)
+                                        # print(
+                                        #     "x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), 0",
+                                        #     x - int(component_pixels_table.s_x),
+                                        #     int(f_v.y) - int(component_pixels_table.s_y), 0)
 
                                         _pixel = pixel.Pixel(x - int(component_pixels_table.s_x), int(f_v.y) - int(component_pixels_table.s_y), 0)
                                         _pixel.color = temp_component.style.color
@@ -153,10 +153,10 @@ class OperationDetails:
                                 for x in range(int(max(f_v.x, s_v.x)), int(component_pixels_table.width)):
 
                                     if x > 0 and f_v.y > 0:
-                                        print(
-                                            "x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), 0",
-                                            x - int(component_pixels_table.s_x),
-                                            int(f_v.y) - int(component_pixels_table.s_y), 0)
+                                        # print(
+                                        #     "x - int(component_pixels_table.s_x), y - int(component_pixels_table.s_y), 0",
+                                        #     x - int(component_pixels_table.s_x),
+                                        #     int(f_v.y) - int(component_pixels_table.s_y), 0)
 
                                         _pixel = pixel.Pixel(x - int(component_pixels_table.s_x), int(f_v.y) - int(component_pixels_table.s_y), 0)
                                         _pixel.color = temp_component.style.color
@@ -166,16 +166,16 @@ class OperationDetails:
                             # s_v = vertexes[temp_face[len(temp_face) - 1]]
                             #
                             # if f_v.x == s_v.x:
-                            #     print("f_v.x == s_v.x: ", f_v.x == s_v.x)
+                            #     # print("f_v.x == s_v.x: ", f_v.x == s_v.x)
                             #     for y in range(int(min(f_v.y, s_v.y)), int(max(f_v.y, s_v.y))):
                             #         for x in range(int(f_v.x), config.CANVAS_WIDTH):
                             #             _pixel = pixel.Pixel(x, y, 0)
                             #             _pixel.color = temp_component.style.color
                             #             pixels_table.xor_pixel(x, y, _pixel)
 
-                            # print("temp_component.name: ", temp_component.name)
-                            # print("temp_component.style: ", temp_component.style.color)
-                            # print("temp_component.name: ", temp_component.name)
+                            # # print("temp_component.name: ", temp_component.name)
+                            # # print("temp_component.style: ", temp_component.style.color)
+                            # # print("temp_component.name: ", temp_component.name)
 
                             used.append([f_v, s_v])
 
@@ -186,7 +186,7 @@ class OperationDetails:
                         t_x = int(x + component_pixels_table.s_x)
                         t_y = int(y + component_pixels_table.s_y)
 
-                        # print(t_table.table)
+                        # # print(t_table.table)
 
                         if t_table[t_x][t_y].color is None and component_pixels_table.table[y][x].color is not None:
                             t_table[t_x][t_y].color = component_pixels_table.table[y][x].color
@@ -210,10 +210,10 @@ class OperationDetails:
 
     # Добавление детали
     def add_detail(self, _detail):
-        print("ДОБАВЛЕНИЕ ДЕТАЛИ!")
-        print(self._operation_details)
+        # print("ДОБАВЛЕНИЕ ДЕТАЛИ!")
+        # print(self._operation_details)
         self._operation_details.append(_detail)
-        print(self._operation_details)
+        # print(self._operation_details)
 
     # Очистка списка деталей
     def delete_all_details(self):
@@ -274,7 +274,7 @@ class OperationDetails:
 
         # Определение позиции детали
         for _operation_detail_number in range(self.get_number_of_operation_details()):
-            print("UID: ", uid, self.get_operation_details()[_operation_detail_number].get_detail_uid())
+            # print("UID: ", uid, self.get_operation_details()[_operation_detail_number].get_detail_uid())
             if self.get_operation_details()[_operation_detail_number].get_detail_uid() == uid:
                 _detail_position = _operation_detail_number
                 break
@@ -301,9 +301,9 @@ class OperationDetails:
                     _moving_vertex.update(_moving_vertex.get_x_position() + x_move,
                                           _moving_vertex.get_y_position() + y_move,
                                           _moving_vertex.get_z_position() + z_move)
-                    print(_moving_vertex.get_x_position(),
-                          _moving_vertex.get_y_position(),
-                          _moving_vertex.get_z_position())
+                    # print(_moving_vertex.get_x_position(),
+                    #       _moving_vertex.get_y_position(),
+                    #       _moving_vertex.get_z_position())
                 _error_status = config.SUCCESS_STATUS
 
         return _error_status

@@ -306,7 +306,7 @@ class Controller:
             _detail.style = _temp_entry_detail.style
             # _detail = _temp_detail
 
-            print("_detail.name, _detail.uid: ", _detail.name, _detail.uid)
+            # print("_detail.name, _detail.uid: ", _detail.name, _detail.uid)
 
             # Добавление выбранной детали в операцинные данные
             self._operation_data.add_detail(_detail)
@@ -319,7 +319,7 @@ class Controller:
             #
             # print(self._canvas_field())
 
-            print(len(self._operation_data.get_operation_details()))
+            # print(len(self._operation_data.get_operation_details()))
 
             # Обновление канваса
             self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
@@ -341,7 +341,7 @@ class Controller:
                 # Удаление детали из бокса
                 self._box.delete(temp_number)
 
-                print("SIZE: ", len(self._operation_data.get_operation_details()))
+                # print("SIZE: ", len(self._operation_data.get_operation_details()))
 
                 # Обновление канваса
                 self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
@@ -359,7 +359,7 @@ class Controller:
             # Движение детали вправо в операционных данных
             self._operation_data.move_detail_by_uid(10, 0, 0, int(element_information[1]))
 
-            print(element_information)
+            # print(element_information)
             # Обновление канваса
             self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
@@ -376,7 +376,7 @@ class Controller:
             # Движение детали вправо в операционных данных
             self._operation_data.move_detail_by_uid(-10, 0, 0, int(element_information[1]))
 
-            print(element_information)
+            # print(element_information)
             # Обновление канваса
             self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
@@ -393,7 +393,7 @@ class Controller:
             # Движение детали вправо в операционных данных
             self._operation_data.move_detail_by_uid(0, -10, 0, int(element_information[1]))
 
-            print(element_information)
+            # print(element_information)
             # Обновление канваса
             self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:
@@ -449,11 +449,11 @@ class Controller:
 
     # Перемещение сцены
     def move_scene_right(self):
-        print("Right")
+        # print("Right")
         self._operation_data.move_details(+10, 0, 0)
         self._operation_axis.move(+10, 0, 0)
         self._operation_light.move(+10, 0, 0)
-        print("<<")
+        # print("<<")
 
         self._free_light_settings_fields()
 
@@ -476,7 +476,7 @@ class Controller:
             # Движение детали вправо в операционных данных
             self._operation_data.move_detail_by_uid(0, +10, 0, int(element_information[1]))
 
-            print(element_information)
+            # print(element_information)
             # Обновление канваса
             self._canvas_field.update(self._operation_data, self._operation_axis, self._operation_light)
         else:

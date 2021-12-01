@@ -4,6 +4,15 @@ from math import radians
 import config
 import detail.light
 import detail.pixel
+import detail
+
+class DeepFace:
+    face = None
+    z_index = None
+
+    def __init__(self, face, z_index):
+        self.z_index = z_index
+        self.face = face
 
 class Component:
 
@@ -152,16 +161,110 @@ class Component:
                min(int(b * _temp_face_light_intensive), 255)
                )
 
-        # print("rgb:", rgb)
+        # # print("rgb:", rgb)
 
-        print("_polygon_pairs_of_vertexes: ", _polygon_pairs_of_vertexes)
+        # # print("_polygon_pairs_of_vertexes: ", _polygon_pairs_of_vertexes)
 
         # Отрисовка области
         # self._get_canvas().create_polygon(_polygon_pairs_of_vertexes, fill=self._get_component_style().get_color())
         self._get_canvas().create_polygon(_polygon_pairs_of_vertexes, fill=detail.pixel.rgb_to_hex( rgb ))
 
+    # Сортировка по глубине поля
+    def _sort_by_z_index(self):
+        new_d_comp = self.faces
+
+        i = 0
+        for _face in self._component_faces:
+            # Список пар координат вершин
+            _polygon_pairs_of_vertexes = []
+            _polygon_pairs_of_vertexes_space = []
+
+            # y = k*x + b
+            min_x = config.ABS_MAX
+            max_x = config.ABS_MIN
+
+            min_y = config.ABS_MAX
+            max_y = config.ABS_MIN
+
+            # Добавление в список пар координат вершин пар вершин
+            for _number_of_vertex in _face:
+                # Текущая вершина по позиции
+                _vertex = self._component_vertexes[_number_of_vertex]
+
+                min_x = min(min_x, _vertex.get_x_position())
+                max_x = max(max_x, _vertex.get_x_position())
+
+                min_y = min(min_y, _vertex.get_y_position())
+                max_y = max(max_y, _vertex.get_y_position())
+
+                # Добавление данных текущей вершины
+                _polygon_pairs_of_vertexes.append([_vertex.get_x_position(),
+                                                   _vertex.get_y_position()])
+                _polygon_pairs_of_vertexes_space.append([_vertex.x, _vertex.y, _vertex.z])
+
+            v_0_mid = detail.vertex.Vertex(
+                (_polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[2][0]) / 2,
+                (_polygon_pairs_of_vertexes_space[1][1] + _polygon_pairs_of_vertexes_space[2][1]) / 2,
+                (_polygon_pairs_of_vertexes_space[1][2] + _polygon_pairs_of_vertexes_space[2][2]) / 2
+            )
+
+            v_1_mid = detail.vertex.Vertex(
+                (_polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[2][0]) / 2,
+                (_polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[2][1]) / 2,
+                (_polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[2][2]) / 2
+            )
+
+            v_2_mid = detail.vertex.Vertex(
+                (_polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[0][0]) / 2,
+                (_polygon_pairs_of_vertexes_space[1][1] + _polygon_pairs_of_vertexes_space[0][1]) / 2,
+                (_polygon_pairs_of_vertexes_space[1][2] + _polygon_pairs_of_vertexes_space[0][2]) / 2
+            )
+
+            z_0_x = v_0_mid.x - _polygon_pairs_of_vertexes_space[0][0]
+            z_0_y = v_0_mid.y - _polygon_pairs_of_vertexes_space[0][1]
+            z_0_z = v_0_mid.z - _polygon_pairs_of_vertexes_space[0][2]
+
+            z_1_x = v_1_mid.x - _polygon_pairs_of_vertexes_space[1][0]
+            z_1_y = v_1_mid.y - _polygon_pairs_of_vertexes_space[1][1]
+
+            I0x = _polygon_pairs_of_vertexes_space[0][0]
+            I0z = _polygon_pairs_of_vertexes_space[0][2]
+
+            I1x = _polygon_pairs_of_vertexes_space[1][0]
+            I1y = _polygon_pairs_of_vertexes_space[1][1]
+
+            x = 0
+
+            if z_0_y * z_1_x - z_1_y * z_0_x != 0:
+                x = (z_0_x * (I1y - I1x) + I0x * z_0_y * z_1_x - I1x * z_1_y * z_0_x) / \
+                    (z_0_y * z_1_x - z_1_y * z_0_x)
+
+            z = I0z
+
+            if z_0_x != 0:
+                z = ((x - I0x) * z_0_z) / z_0_x + I0z
+
+            z_index = z
+
+            new_d_comp[i] = DeepFace(new_d_comp[i], z_index)
+            i += 1
+
+        # print(new_d_comp)
+
+        new_d_comp = sorted(new_d_comp, key=lambda d_face: d_face.z_index)
+
+        # print("--")
+        # print("len(new_d_comp)", len(new_d_comp))
+        for i in range(len(new_d_comp)):
+            # print("new_d_comp[i].z_index: ", new_d_comp[i].z_index)
+            self._component_faces[i] = new_d_comp[i].face
+
+
+
     # Прототип функции отрисовки компоненты
     def draw(self, _canvas, _light, _operation_axis):
+
+        self._sort_by_z_index()
 
         # Установка холста рисования
         self.set_component_canvas(_canvas)
@@ -308,15 +411,15 @@ class Cylinder(Component):
             ])
 
             self._component_faces.append([
-                len(self._component_vertexes) - 2,
+                len(self._component_vertexes) - 3,
                 len(self._component_vertexes) - 4,
-                0
+                1
             ])
 
             self._component_faces.append([
                 len(self._component_vertexes) - 1,
                 len(self._component_vertexes) - 3,
-                1
+                0
             ])
 
         self._component_faces.append([
@@ -344,7 +447,7 @@ class Cylinder(Component):
         ])
 
 
-        print("self._component_faces: ", self._component_faces)
+        # # print("self._component_faces: ", self._component_faces)
 
 
 

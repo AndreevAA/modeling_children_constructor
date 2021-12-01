@@ -33,15 +33,15 @@ def zoom_vertex_by_base_vertex(vertex, base_vertex, zoom_coefficient):
 # Поворот точки относительно точки
 def rotate_vertex_by_base_vertex(pivot_point, base_point, rotation_way, rotation_degree):
 
-    print("\n-->")
-    print("base_point: ", base_point.x, base_point.y, base_point.z)
-    print("rotation_way = ", rotation_way)
-    print("HERE")
-    print(rotation_degree)
-    print("rotation_degree = ", rotation_degree, "sin(rotation_degree) = ", sin(rotation_degree),
-          "cos(rotation_degree)", cos(rotation_degree))
+    # print("\n-->")
+    # print("base_point: ", base_point.x, base_point.y, base_point.z)
+    # print("rotation_way = ", rotation_way)
+    # print("HERE")
+    # print(rotation_degree)
+    # print("rotation_degree = ", rotation_degree, "sin(rotation_degree) = ", sin(rotation_degree),
+    #       "cos(rotation_degree)", cos(rotation_degree))
 
-    print("pivot_point: ", pivot_point.x, pivot_point.y, pivot_point.z)
+    # print("pivot_point: ", pivot_point.x, pivot_point.y, pivot_point.z)
 
     # Смещение оси поворота
     result_point = detail.vertex.Vertex(pivot_point.x - base_point.x,
@@ -77,7 +77,7 @@ def rotate_vertex_by_base_vertex(pivot_point, base_point, rotation_way, rotation
         z_rotated_result_point = result_point.z
         # result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
 
-    print("x_rotated_result_point, y_rotated_result_point, z_rotated_result_point: ", x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
+    # print("x_rotated_result_point, y_rotated_result_point, z_rotated_result_point: ", x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
 
     # Обновление координат в виртуальной точке
     # result_point.update(x_rotated_result_point, y_rotated_result_point, z_rotated_result_point)
@@ -87,8 +87,8 @@ def rotate_vertex_by_base_vertex(pivot_point, base_point, rotation_way, rotation
                                         y_rotated_result_point + base_point.y,
                                         z_rotated_result_point + base_point.z)
 
-    print("result_point: ", result_point.x, result_point.y, result_point.z)
-    print("<--\n")
+    # print("result_point: ", result_point.x, result_point.y, result_point.z)
+    # print("<--\n")
 
     return result_point
 

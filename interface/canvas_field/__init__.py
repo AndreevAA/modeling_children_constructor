@@ -45,10 +45,10 @@ class CanvasField:
 
         # Отрисовка деталей
         for temp_detail in _operation_data.get_operation_details():
-            print("Рисуется ->")
-            start_time = time()
+            # print("Рисуется ->")
+            # start_time = time()
             temp_detail.draw(self._canvas_field, _light, _operation_axis)
-            print("Time: ", time() - start_time)
+            # print("Time: ", time() - start_time)
 
         self.canvas_field.create_oval(
             [_light.x - config.SUN_R, _light.y - config.SUN_R],
