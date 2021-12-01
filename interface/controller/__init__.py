@@ -615,10 +615,10 @@ class Controller:
 
         # Получение угла поворота фигуры
         try:
-            _x_entry = int(self._x_entry.get())
-            _y_entry = int(self._y_entry.get())
-            _z_entry = int(self._z_entry.get())
-            _power = int(self._power.get())
+            _x_entry = float(self._x_entry.get())
+            _y_entry = float(self._y_entry.get())
+            _z_entry = float(self._z_entry.get())
+            _power = float(self._power.get())
         except Exception:
             interface.message.Message(config.ERROR_STATUS_DETAIL_ERROR_DEGREE)
 

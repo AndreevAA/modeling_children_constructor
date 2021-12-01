@@ -36,6 +36,8 @@ def rotate_vertex_by_base_vertex(pivot_point, base_point, rotation_way, rotation
     print("\n-->")
     print("base_point: ", base_point.x, base_point.y, base_point.z)
     print("rotation_way = ", rotation_way)
+    print("HERE")
+    print(rotation_degree)
     print("rotation_degree = ", rotation_degree, "sin(rotation_degree) = ", sin(rotation_degree),
           "cos(rotation_degree)", cos(rotation_degree))
 

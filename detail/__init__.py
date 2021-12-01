@@ -12,6 +12,15 @@ from detail import vertex
 from detail.component import Component
 
 
+class Deep:
+    component = None
+    z_index = None
+
+    def __init__(self, _component, _z_index):
+        self.z_index = _z_index
+        self.component = _component
+
+
 class Detail:
     # Данные о детали
     _detail_name = None
@@ -100,8 +109,96 @@ class Detail:
     def get_detail_name(self):
         return self._detail_name
 
+    def _sort_by_z_index(self):
+        new_d_comp = self._detail_components
+
+        for i in range(len(new_d_comp)):
+            z_index = -config.ABS_MIN
+
+            for _component_face_vertexes in new_d_comp[i].get_component_faces():
+                # Список пар координат вершин
+                _polygon_pairs_of_vertexes = []
+                _polygon_pairs_of_vertexes_space = []
+
+                # y = k*x + b
+                min_x = config.ABS_MAX
+                max_x = config.ABS_MIN
+
+                min_y = config.ABS_MAX
+                max_y = config.ABS_MIN
+
+                # Добавление в список пар координат вершин пар вершин
+                for _number_of_vertex in _component_face_vertexes:
+                    # Текущая вершина по позиции
+                    _vertex = new_d_comp[i].get_component_vertexes()[int(_number_of_vertex)]
+
+                    min_x = min(min_x, _vertex.get_x_position())
+                    max_x = max(max_x, _vertex.get_x_position())
+
+                    min_y = min(min_y, _vertex.get_y_position())
+                    max_y = max(max_y, _vertex.get_y_position())
+
+                    # Добавление данных текущей вершины
+                    _polygon_pairs_of_vertexes.append([_vertex.get_x_position(),
+                                                       _vertex.get_y_position()])
+                    _polygon_pairs_of_vertexes_space.append([_vertex.x, _vertex.y, _vertex.z])
+
+                v_0_mid = detail.vertex.Vertex(
+                    (_polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[2][0]) / 2,
+                    (_polygon_pairs_of_vertexes_space[1][1] + _polygon_pairs_of_vertexes_space[2][1]) / 2,
+                    (_polygon_pairs_of_vertexes_space[1][2] + _polygon_pairs_of_vertexes_space[2][2]) / 2
+                )
+
+                v_1_mid = detail.vertex.Vertex(
+                    (_polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[2][0]) / 2,
+                    (_polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[2][1]) / 2,
+                    (_polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[2][2]) / 2
+                )
+
+                v_2_mid = detail.vertex.Vertex(
+                    (_polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[0][0]) / 2,
+                    (_polygon_pairs_of_vertexes_space[1][1] + _polygon_pairs_of_vertexes_space[0][1]) / 2,
+                    (_polygon_pairs_of_vertexes_space[1][2] + _polygon_pairs_of_vertexes_space[0][2]) / 2
+                )
+
+                z_0_x = v_0_mid.x - _polygon_pairs_of_vertexes_space[0][0]
+                z_0_y = v_0_mid.y - _polygon_pairs_of_vertexes_space[0][1]
+                z_0_z = v_0_mid.z - _polygon_pairs_of_vertexes_space[0][2]
+
+                z_1_x = v_1_mid.x - _polygon_pairs_of_vertexes_space[1][0]
+                z_1_y = v_1_mid.y - _polygon_pairs_of_vertexes_space[1][1]
+
+                I0x = _polygon_pairs_of_vertexes_space[0][0]
+                I0z = _polygon_pairs_of_vertexes_space[0][2]
+
+                I1x = _polygon_pairs_of_vertexes_space[1][0]
+                I1y = _polygon_pairs_of_vertexes_space[1][1]
+
+                x = 0
+
+                if z_0_y * z_1_x - z_1_y * z_0_x != 0:
+                    x = (z_0_x * (I1y - I1x) + I0x * z_0_y * z_1_x - I1x * z_1_y * z_0_x) / \
+                        (z_0_y * z_1_x - z_1_y * z_0_x)
+
+                z = I0z
+
+                if z_0_x != 0:
+                    z = ((x - I0x) * z_0_z) / z_0_x + I0z
+
+                z_index = z
+
+            new_d_comp[i] = Deep(new_d_comp[i], z_index)
+
+        sorted(new_d_comp, key=lambda Deep: Deep.z_index)
+
+        for i in range(len(new_d_comp)):
+            self._detail_components[i] = new_d_comp[i].component
+
     # Отрисовка детали
     def draw(self, _canvas_field, _light, _operation_axis):
+
+        self._sort_by_z_index()
+
         for _component in self._detail_components:
             _component.draw(_canvas_field, _light, _operation_axis)
 
@@ -272,6 +369,42 @@ class UploadingDetails:
 
         return _faces
 
+    def __read_cylinder(self, _component_name, _detail_style):
+        cylinder_f = list(map(int, self.get_file_row_data()[self._file_string].split()))
+        f_pos = vertex.Vertex(
+            cylinder_f[0],
+            cylinder_f[1],
+            cylinder_f[2]
+        )
+        self._file_string += 1
+
+        height = int(self.get_file_row_data()[self._file_string])
+        self._file_string += 1
+
+        radius = int(self.get_file_row_data()[self._file_string])
+        self._file_string += 1
+
+        number_of_steps = int(self.get_file_row_data()[self._file_string])
+        self._file_string += 1
+
+        print(cylinder_f[0],
+            cylinder_f[1],
+            cylinder_f[2])
+        print(height)
+        print(radius)
+        print(number_of_steps)
+
+        return detail.component.Cylinder(
+            _component_name=_component_name,
+            _component_style=_detail_style,
+            _f_pos=f_pos,
+            _number_of_steps=number_of_steps,
+            _radius=radius,
+            height=height,
+            _component_vertexes=[],
+            _component_faces=[]
+        )
+
     # Прочитать компоненты
     def __read_detail_components(self, _number_of_components, _detail_style):
 
@@ -280,24 +413,34 @@ class UploadingDetails:
 
         # Последовательное чтение компонентов
         for _reading_component in range(_number_of_components):
-            _number_of_vertexes = self.__read_number_of_vertexes()
+            _component_name = str(self.get_file_row_data()[self._file_string])
             self._file_string += 1
-            print(_number_of_vertexes)
+            print(_component_name)
 
-            _vertexes = self.__read_vertexes(_number_of_vertexes)
-            self._file_string += _number_of_vertexes
+            if _component_name == "Цилиндр":
+                _detail_components.append(
+                    self.__read_cylinder(_component_name=_component_name,
+                                         _detail_style=_detail_style)
+                )
+            else:
+                _number_of_vertexes = self.__read_number_of_vertexes()
+                self._file_string += 1
+                print(_number_of_vertexes)
 
-            _number_of_faces = self.__read_number_of_faces()
-            self._file_string += 1
+                _vertexes = self.__read_vertexes(_number_of_vertexes)
+                self._file_string += _number_of_vertexes
 
-            print(_number_of_faces)
-            _faces = self.__read_faces(_number_of_faces)
-            self._file_string += _number_of_faces
+                _number_of_faces = self.__read_number_of_faces()
+                self._file_string += 1
 
-            _detail_components.append(
-                Component(_detail_style,
-                 _vertexes, _faces)
-            )
+                print(_number_of_faces)
+                _faces = self.__read_faces(_number_of_faces)
+                self._file_string += _number_of_faces
+
+                _detail_components.append(
+                    Component(_detail_style,
+                              _vertexes, _faces)
+                )
 
         return _detail_components
 
@@ -392,4 +535,3 @@ class UploadingDetails:
 
                 for i in faces:
                     print(i[0], i[1], i[2])
-

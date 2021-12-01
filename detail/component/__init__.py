@@ -1,4 +1,6 @@
 # Объект детали Компонент
+from math import radians
+
 import config
 import detail.light
 import detail.pixel
@@ -83,83 +85,6 @@ class Component:
                                                _vertex.get_y_position()])
             _polygon_pairs_of_vertexes_space.append([_vertex.x, _vertex.y, _vertex.z])
 
-        # print("_polygon_pairs_of_vertexes: ", _polygon_pairs_of_vertexes)
-
-        # # pixels = []
-        # #
-        # # for i in range(config.ABS_MAX ** 2):
-        # #     r_p = []
-        # #     for j in range(config.ABS_MAX):
-        # #         r_p.append(None)
-        # #     pixels.append(r_p)
-        # #
-        # # for i in range(0, len(_polygon_pairs_of_vertexes) - 1):
-        # #     y1 = int(_polygon_pairs_of_vertexes[i][1])
-        # #     y2 = int(_polygon_pairs_of_vertexes[i + 1][1])
-        # #     x1 = _polygon_pairs_of_vertexes[i][0]
-        # #     x2 = _polygon_pairs_of_vertexes[i + 1][0]
-        # #
-        # #     if -y1 + y2 != 0 and (x1 - x2) != 0:
-        # #         k = (-y1 + y2) / (x1 - x2)
-        # #         b = k * x1 - y1
-        # #
-        # #         for y in range(y1, y2 + 1):
-        # #             x = (y - b) / k
-        # #
-        # #             for t_x in range(int(x), int(max_x)):
-        # #                 if pixels[y][t_x] is None:
-        # #                     pixels[y][t_x] = self._get_component_style().get_color()
-        # #                 else:
-        # #                     pixels[y][t_x] = None
-        # #             self._get_canvas().create_line(x, y, x, y, fill=self._get_component_style().get_color())
-        #     # else:
-        #     #     for y in range(y1, y2 + 1):
-        #     #         x = (y - b) / k
-        #     #
-        #     #         for t_x in range(x, max_x):
-        #     #             if pixels[y][t_x] is None:
-        #     #                 pixels[y][t_x] = self._get_component_style().get_color()
-        #     #             else:
-        #     #                 pixels[y][t_x] = None
-        #     #         self._get_canvas().create_line(x, y, x, y, fill=self._get_component_style().get_color())
-        #
-        # for y in range(int(min_y), int(max_y)):
-        #     for x in range(int(min_x), int(max_x)):
-        #         if pixels[y][x] is not None:
-        #             self._get_canvas().create_line(x, y, x, y, fill=self._get_component_style().get_color())
-
-        #
-        # for x in range(min_x, max_x):
-
-        # print(
-        #     "A(), B(), distance",
-        #     _polygon_pairs_of_vertexes_space,
-        #     _polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[1][0] +
-        #     _polygon_pairs_of_vertexes_space[2][0] / 3,
-        #     _polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[1][1] +
-        #     _polygon_pairs_of_vertexes_space[2][1] / 3,
-        #     _polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[1][2] +
-        #     _polygon_pairs_of_vertexes_space[2][2] / 3,
-        #     _light.x,
-        #     _light.y,
-        #     _light.z,
-        #     detail.vertex.get_distance(
-        #         detail.vertex.Vertex(
-        #             int(_polygon_pairs_of_vertexes_space[0][0] + _polygon_pairs_of_vertexes_space[1][0] +
-        #                 _polygon_pairs_of_vertexes_space[2][0] / 3),
-        #             int(_polygon_pairs_of_vertexes_space[0][1] + _polygon_pairs_of_vertexes_space[1][1] +
-        #                 _polygon_pairs_of_vertexes_space[2][1] / 3),
-        #             int(_polygon_pairs_of_vertexes_space[0][2] + _polygon_pairs_of_vertexes_space[1][2] +
-        #                 _polygon_pairs_of_vertexes_space[2][2] / 3)
-        #         ),
-        #         detail.vertex.Vertex(
-        #             _light.x,
-        #             _light.y,
-        #             _light.z
-        #         )
-        #     )
-        # )
-
         v_0_mid = detail.vertex.Vertex(
             (_polygon_pairs_of_vertexes_space[1][0] + _polygon_pairs_of_vertexes_space[2][0]) / 2,
             (_polygon_pairs_of_vertexes_space[1][1] + _polygon_pairs_of_vertexes_space[2][1]) / 2,
@@ -184,11 +109,6 @@ class Component:
 
         z_1_x = v_1_mid.x - _polygon_pairs_of_vertexes_space[1][0]
         z_1_y = v_1_mid.y - _polygon_pairs_of_vertexes_space[1][1]
-        z_1_z = v_1_mid.z - _polygon_pairs_of_vertexes_space[1][2]
-
-        z_2_x = v_2_mid.x - _polygon_pairs_of_vertexes_space[2][0]
-        z_2_y = v_2_mid.y - _polygon_pairs_of_vertexes_space[2][1]
-        z_2_z = v_2_mid.z - _polygon_pairs_of_vertexes_space[2][2]
 
         I0x = _polygon_pairs_of_vertexes_space[0][0]
         I0y = _polygon_pairs_of_vertexes_space[0][1]
@@ -196,15 +116,12 @@ class Component:
 
         I1x = _polygon_pairs_of_vertexes_space[1][0]
         I1y = _polygon_pairs_of_vertexes_space[1][1]
-        I1z = _polygon_pairs_of_vertexes_space[1][2]
 
         x = 0
 
         if z_0_y * z_1_x - z_1_y * z_0_x != 0:
             x = (z_0_x * (I1y - I1x) + I0x * z_0_y * z_1_x - I1x * z_1_y * z_0_x) / \
                 (z_0_y * z_1_x - z_1_y * z_0_x)
-
-        print(_polygon_pairs_of_vertexes_space, x)
 
         y = I0y
 
@@ -226,8 +143,6 @@ class Component:
             )
         ))
 
-        # print("_temp_face_light_intensive = ", _temp_face_light_intensive * 100000)
-
         r = 255
         g = 0
         b = 0
@@ -238,6 +153,8 @@ class Component:
                )
 
         # print("rgb:", rgb)
+
+        print("_polygon_pairs_of_vertexes: ", _polygon_pairs_of_vertexes)
 
         # Отрисовка области
         # self._get_canvas().create_polygon(_polygon_pairs_of_vertexes, fill=self._get_component_style().get_color())
@@ -283,6 +200,10 @@ class Component:
     def name(self):
         return self._component_name
 
+    @name.setter
+    def name(self, value):
+        self._component_name = value
+
     @property
     def style(self):
         return self._component_style
@@ -298,4 +219,133 @@ class Component:
     @property
     def position(self):
         return self._component_position
+
+
+class Cylinder(Component):
+
+    _radius = None
+    _number_of_steps = None
+
+    _f_pos = None
+    _height = None
+
+    def __init__(self, _component_style, _component_vertexes, _component_faces,
+                 _radius, _number_of_steps, _f_pos, height, _component_name):
+        super().__init__(_component_style, _component_vertexes, _component_faces)
+
+        # Позиция координат координаты
+        self._f_pos = _f_pos
+        self._height = height
+
+        self._component_name = _component_name
+
+        self._component_name = _component_name
+
+        self._component_vertexes = []
+        self._component_faces = []
+
+        self._number_of_steps = _number_of_steps
+
+        self._radius = _radius
+
+        degree_step = 360 / _number_of_steps
+
+        f_base_point = detail.vertex.Vertex(
+            _f_pos.x,
+            _f_pos.y,
+            _f_pos.z
+        )
+
+        s_base_point = detail.vertex.Vertex(
+            f_base_point.x,
+            f_base_point.y,
+            f_base_point.z + height
+        )
+
+        f_pivot_point = detail.vertex.Vertex(
+            f_base_point.x + self._radius,
+            f_base_point.y,
+            f_base_point.z
+        )
+
+        s_pivot_point = detail.vertex.Vertex(
+            s_base_point.x + self._radius,
+            s_base_point.y,
+            s_base_point.z
+        )
+
+        self._component_vertexes.append(f_base_point)
+        self._component_vertexes.append(s_base_point)
+
+        self._component_vertexes.append(f_pivot_point)
+        self._component_vertexes.append(s_pivot_point)
+
+        for _t_step in range(self._number_of_steps):
+
+            rotation_degree = radians(float(_t_step * degree_step))
+
+            f_new_vertex = detail.vertex.rotate_vertex_by_base_vertex(
+                f_pivot_point, f_base_point, config.AXIS_Z, rotation_degree
+            )
+
+            s_new_vertex = detail.vertex.rotate_vertex_by_base_vertex(
+                s_pivot_point, s_base_point, config.AXIS_Z, rotation_degree
+            )
+
+            self._component_vertexes.append(f_new_vertex)
+            self._component_vertexes.append(s_new_vertex)
+
+            self._component_faces.append([
+                len(self._component_vertexes) - 1,
+                len(self._component_vertexes) - 4,
+                len(self._component_vertexes) - 2,
+            ])
+
+            self._component_faces.append([
+                len(self._component_vertexes) - 2,
+                len(self._component_vertexes) - 3,
+                len(self._component_vertexes) - 4,
+            ])
+
+            self._component_faces.append([
+                len(self._component_vertexes) - 2,
+                len(self._component_vertexes) - 4,
+                0
+            ])
+
+            self._component_faces.append([
+                len(self._component_vertexes) - 1,
+                len(self._component_vertexes) - 3,
+                1
+            ])
+
+        self._component_faces.append([
+            1,
+            3,
+            len(self._component_vertexes) - 2,
+        ])
+
+        self._component_faces.append([
+            2,
+            0,
+            len(self._component_vertexes) - 1,
+        ])
+
+        self._component_faces.append([
+            3,
+            len(self._component_vertexes) - 1,
+            2
+        ])
+
+        self._component_faces.append([
+            2,
+            len(self._component_vertexes) - 2,
+            len(self._component_vertexes) - 1
+        ])
+
+
+        print("self._component_faces: ", self._component_faces)
+
+
+
 

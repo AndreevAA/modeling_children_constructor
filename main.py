@@ -14,7 +14,7 @@ import operation.operation_axis
 
 def main():
     # Подгрузка данных
-    _uploaded_details = detail.UploadingDetails("input_details/cube.txt")
+    _uploaded_details = detail.UploadingDetails("input_details/real_details.txt")
 
     # Непосредственная загрузка данных
     _error_status = _uploaded_details.upload_details()
